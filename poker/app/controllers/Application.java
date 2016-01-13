@@ -11,11 +11,23 @@ import de.htwg.se.texasholdem.controller.imp.PokerControllerImp;
 
 public class Application extends Controller {
 	
-	PokerController controller = new PokerControllerImp(); 
+	PokerController controller = new PokerControllerImp();
+	String gameName = "Poker Texas Holdem";
 
-    public Result index() {
-        //return ok(index.render(controller.getTableString()));
-        return ok();
+    public Result poker() {
+        return ok(poker.render(gameName, pokerMain.render()));
+    }
+    
+    public Result pokerGame() {
+    	return ok(poker.render(gameName, pokerGame.render()));
+    }
+    
+    public Result pokerHelp() {
+    	return ok(poker.render(gameName, pokerHelp.render()));
+    }
+    
+    public Result pokerAbout() {
+    	return ok(poker.render(gameName, pokerAbout.render()));
     }
     
     public Result addPlayer(String name) {
@@ -25,6 +37,7 @@ public class Application extends Controller {
     }
 
     public Result getPlayers() {
-    	return ok(index.render(controller.getPlayerList()));
+    	//return ok(index.render(controller.getPlayerList()));
+    	return ok();
     }
 }

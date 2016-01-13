@@ -3,7 +3,13 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                           controllers.Application.poker()
+GET		/poker						controllers.Application.poker()
+GET     /game                       controllers.Application.pokerGame()
+GET     /help                       controllers.Application.pokerHelp()
+GET     /about                      controllers.Application.pokerAbout()
+
+
 GET		/player/:name				controllers.Application.addPlayer(name: String)
 GET		/players					controllers.Application.getPlayers()
 
