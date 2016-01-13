@@ -3,14 +3,20 @@ repository/
 poker/.sbtserver
 poker/project
 
+# Folders
 logs
+target
+
+# Files
 *.log
 *.sbt
 
-target
+# Others
 /.idea
 /.idea_modules
 /.classpath
 /.project
 /.settings
+
+# Runtime
 poker/RUNNING_PID
