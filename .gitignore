@@ -1,12 +1,16 @@
 bin/
 repository/
-poker/.sbtserver*
+poker/.sbtserver
+poker/project
 
 logs
+*.log
+*.sbt
+
 target
 /.idea
 /.idea_modules
 /.classpath
 /.project
 /.settings
-/RUNNING_PID
+poker/RUNNING_PID
