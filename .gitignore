@@ -1,15 +1,16 @@
 bin/
 repository/
-poker/.sbtserver
-poker/project
 
 # Folders
 logs
 target
+poker/.sbtserver
+project
 
 # Files
 *.log
 *.sbt
+*sbtserver
 
 # Others
 /.idea
