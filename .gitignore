@@ -5,6 +5,8 @@ repository/
 logs
 target
 poker/.sbtserver
+*.sbtserver
+poker/project/.sbtserver
 project
 
 # Files
