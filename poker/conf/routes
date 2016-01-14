@@ -3,15 +3,33 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.poker()
-GET		/poker						controllers.Application.poker()
-GET     /game                       controllers.Application.pokerGame()
-GET     /help                       controllers.Application.pokerHelp()
-GET     /about                      controllers.Application.pokerAbout()
+#GET     /                           controllers.Application.poker()
+#GET		/poker						controllers.Application.poker()
+#GET     /game                       controllers.Application.pokerGame()
+#GET     /help                       controllers.Application.pokerHelp()
+#GET     /about                      controllers.Application.pokerAbout()
 
 
-GET		/player/:name				controllers.Application.addPlayer(name: String)
-GET		/players					controllers.Application.getPlayers()
+#GET		/player/:name				controllers.Application.addPlayer(name: String)
+#GET		/players					controllers.Application.getPlayers()
+
+# SecureSocial
+GET        /                    @controllers.Application.index
+GET        /userAware           @controllers.Application.userAware
+GET        /only-twitter        @controllers.Application.onlyTwitter
+GET        /link-result         @controllers.Application.linkResult
+GET        /current-user        @controllers.Application.currentUser
+
+# Login Page
+
+
+
+# Providers entry points
+
+
+
+
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
