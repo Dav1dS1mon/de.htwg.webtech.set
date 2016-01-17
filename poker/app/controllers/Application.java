@@ -17,6 +17,7 @@
 package controllers;
 
 import com.google.inject.Inject;
+import de.htwg.se.texasholdem.controller.imp.PokerControllerImp;
 import play.Logger;
 import play.libs.F;
 import play.mvc.Controller;
@@ -32,7 +33,9 @@ import views.html.linkResult;
 import views.html.pokerGame;
 import views.html.pokerHelp;
 import views.html.pokerAbout;
-
+import de.htwg.se.texasholdem.controller.PokerController;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * A sample controller
@@ -40,6 +43,8 @@ import views.html.pokerAbout;
 public class Application extends Controller {
     public static Logger.ALogger logger = Logger.of("application.controllers.Application");
     private RuntimeEnvironment env;
+
+    private PokerController controller = new PokerControllerImp();
 
     /**
      * A constructor needed to get a hold of the environment instance.
@@ -139,7 +144,77 @@ public class Application extends Controller {
         }
         return ok(pokerAbout.render());
     }
-    
+
+    @SecuredAction
+    public Result addPlayer(String name) {
+        controller.addPlayer(name);
+
+        return ok("Player " + name + " added");
+    }
+
+    /*
+    @SecuredAction
+    public Result jsonField {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JsonOrgModule());
+        JSONObject json = new JSONObject();
+        JSONArray f = new JSONArray();
+
+        object =
+        {
+            "players" : [
+                {
+                    "Player1" : {
+                        "credits": credits,
+                        Cards: ["card1", "card2"] },
+                    "Player2" : {
+                        "credits": credits,
+                        Cards: ["card1", "card2"] },
+                    ...
+            ],
+            "communityCards" : ["card1", "card2", "card3", "card4", "card5"],
+            "smallBind" : 30,
+            "dealer" : playerX,
+            "pot" : 3000,
+            "currentPlayer" : playerX,
+            "bettingStatus" : bettingStatus,
+            "gameStatus" : gameStatus
+        }
+    }
+    }
+    */
+
+    /*
+
+    public JsonNode jsonField() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JsonOrgModule());
+		JSONObject json = new JSONObject();
+		JSONArray f = new JSONArray();
+		int i = 1;
+		for (IGameToken[] row : controller.getField()) {
+			JSONArray r = new JSONArray();
+			int j = 1;
+			for (IGameToken token : row) {
+				JSONObject t = new JSONObject();
+				t.put("id", i + "_" + j);
+				t.put("name", token.getName());
+				r.put(t);
+				j++;
+			}
+			f.put(r);
+			i++;
+		}
+		json.put("current", controller.getcPlayer().getName());
+		json.put("p1wins", controller.getWinPlayer1());
+		json.put("p2wins", controller.getWinPlayer2());
+		json.put("status", String.valueOf(controller.getStatus()));
+		json.put("field", f);
+		return mapper.valueToTree(json);
+	}
+
+    */
     
     /*@SecuredAction
     public Result testmethode() {
