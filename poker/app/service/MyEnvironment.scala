@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,22 +17,17 @@
 package service
 
 import securesocial.core.RuntimeEnvironment
-import securesocial.core.providers._
 import securesocial.core.services.UserService
-
+import securesocial.core.providers._
 import scala.collection.immutable.ListMap
 
 class MyEnvironment extends RuntimeEnvironment.Default {
   type U = DemoUser
+
   override lazy val providers = ListMap(
-    //See securesocial.conf for reason why deactivated
-    //include(new FacebookProvider(routes, cacheService, oauth2ClientFor(FacebookProvider.Facebook))),
     include(new GitHubProvider(routes, cacheService, oauth2ClientFor(GitHubProvider.GitHub))),
-    include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google))),
-    // oauth 1 client providers
-    //include(new TwitterProvider(routes, cacheService, oauth1ClientFor(TwitterProvider.Twitter))),
-    // username password
-    include(new UsernamePasswordProvider[U](userService, avatarService, viewTemplates, passwordHashers))
+    include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google)))
   )
+
   override val userService: UserService[U] = new InMemoryUserService()
 }

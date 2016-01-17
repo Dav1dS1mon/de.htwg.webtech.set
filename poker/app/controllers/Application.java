@@ -1,33 +1,44 @@
+/**
+ * Copyright 2012-214 Jorge Aliss (jaliss at gmail dot com) - twitter: @jaliss
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package controllers;
 
-import play.*;
+import com.google.inject.Inject;
 import play.Logger;
 import play.libs.F;
-import securesocial.core.RuntimeEnvironment;
-import play.mvc.*;
-
-import views.html.*;
-
-import com.google.inject.Inject;
-
-import de.htwg.se.texasholdem.*;
-import de.htwg.se.texasholdem.controller.PokerController;
-import de.htwg.se.texasholdem.controller.imp.PokerControllerImp;
+import play.mvc.Controller;
+import play.mvc.Result;
 import securesocial.core.BasicProfile;
 import securesocial.core.RuntimeEnvironment;
 import securesocial.core.java.SecureSocial;
 import securesocial.core.java.SecuredAction;
 import securesocial.core.java.UserAwareAction;
 import service.DemoUser;
+import views.html.index;
+import views.html.linkResult;
+import views.html.pokerGame;
+import views.html.pokerHelp;
+import views.html.pokerAbout;
 
+
+/**
+ * A sample controller
+ */
 public class Application extends Controller {
-	
-	PokerController controller = new PokerControllerImp();
-	String gameName = "Poker Texas Holdem";
-	
-
-	
-	public static Logger.ALogger logger = Logger.of("application.controllers.Application");
+    public static Logger.ALogger logger = Logger.of("application.controllers.Application");
     private RuntimeEnvironment env;
 
     /**
@@ -74,10 +85,10 @@ public class Application extends Controller {
         return ok("Hello " + userName + ", you are seeing a public page");
     }
 
-    @SecuredAction(authorization = WithProvider.class, params = {"twitter"})
+    /*@SecuredAction(authorization = WithProvider.class, params = {"twitter"})
     public Result onlyTwitter() {
         return ok("You are seeing this because you logged in using Twitter");
-    }
+    }*/
 
     @SecuredAction
     public Result linkResult() {
@@ -104,39 +115,41 @@ public class Application extends Controller {
             }
         });
     }
-	
     
-        
-	//Startseite
-    public Result poker() {
-    	if(logger.isDebugEnabled()){
+    @SecuredAction
+    public Result pokerGame() {
+        if(logger.isDebugEnabled()){
+            logger.debug("access granted to pokerGame");
+        }
+        return ok(pokerGame.render());
+    }
+    
+    @SecuredAction
+    public Result pokerHelp() {
+        if(logger.isDebugEnabled()){
+            logger.debug("access granted to pokerHelp");
+        }
+        return ok(pokerHelp.render());
+    }
+    
+    @SecuredAction
+    public Result pokerAbout() {
+        if(logger.isDebugEnabled()){
+            logger.debug("access granted to pokerAbout");
+        }
+        return ok(pokerAbout.render());
+    }
+    
+    
+    /*@SecuredAction
+    public Result testmethode() {
+        if(logger.isDebugEnabled()){
             logger.debug("access granted to index");
         }
         DemoUser user = (DemoUser) ctx().args.get(SecureSocial.USER_KEY);
-        
-        return ok(poker.render(gameName, userDetails.render(user, SecureSocial.env())));
-    }
-    
-    public Result pokerGame() {
-    	return ok(poker.render(gameName, pokerGame.render()));
-    }
-    
-    public Result pokerHelp() {
-    	return ok(poker.render(gameName, pokerHelp.render()));
-    }
-    
-    public Result pokerAbout() {
-    	return ok(poker.render(gameName, pokerAbout.render()));
-    }
-    
-    public Result addPlayer(String name) {
-    	controller.addPlayer(name);
-    	//return ok(index.render("Added player"));
-    	return ok();
-    }
+        return ok(test.render());
+    }*/
 
-    public Result getPlayers() {
-    	//return ok(index.render(controller.getPlayerList()));
-    	return ok();
-    }
+    
+    
 }

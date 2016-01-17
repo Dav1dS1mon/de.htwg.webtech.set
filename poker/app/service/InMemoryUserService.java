@@ -1,17 +1,18 @@
 /**
  * Copyright 2012-2014 Jorge Aliss (jaliss at gmail dot com) - twitter: @jaliss
- * <p/>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 package service;
 
@@ -19,10 +20,10 @@ import play.Logger;
 import play.libs.F;
 import securesocial.core.BasicProfile;
 import securesocial.core.PasswordInfo;
+import securesocial.core.services.SaveMode;
 import securesocial.core.java.BaseUserService;
 import securesocial.core.java.Token;
 import securesocial.core.providers.UsernamePasswordProvider;
-import securesocial.core.services.SaveMode;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,10 +48,10 @@ public class InMemoryUserService extends BaseUserService<DemoUser> {
             result = new DemoUser(profile);
             users.put(profile.providerId() + profile.userId(), result);
         } else if (mode == SaveMode.LoggedIn()) {
-            for (Iterator<DemoUser> it = users.values().iterator(); it.hasNext() && result == null; ) {
+            for (Iterator<DemoUser> it =  users.values().iterator() ; it.hasNext() && result == null ; ) {
                 DemoUser user = it.next();
-                for (BasicProfile p : user.identities) {
-                    if (p.userId().equals(profile.userId()) && p.providerId().equals(profile.providerId())) {
+                for ( BasicProfile p : user.identities) {
+                    if ( p.userId().equals(profile.userId()) && p.providerId().equals(profile.providerId())) {
                         user.identities.remove(p);
                         user.identities.add(profile);
                         result = user;
@@ -59,11 +60,10 @@ public class InMemoryUserService extends BaseUserService<DemoUser> {
                 }
             }
         } else if (mode == SaveMode.PasswordChange()) {
-            for (Iterator<DemoUser> it = users.values().iterator(); it.hasNext() && result == null; ) {
+            for (Iterator<DemoUser> it =  users.values().iterator() ; it.hasNext() && result == null ; ) {
                 DemoUser user = it.next();
                 for (BasicProfile p : user.identities) {
-                    if (p.userId().equals(profile.userId()) && p.providerId()
-                            .equals(UsernamePasswordProvider.UsernamePassword())) {
+                    if (p.userId().equals(profile.userId()) && p.providerId().equals(UsernamePasswordProvider.UsernamePassword())) {
                         user.identities.remove(p);
                         user.identities.add(profile);
                         result = user;
@@ -81,22 +81,21 @@ public class InMemoryUserService extends BaseUserService<DemoUser> {
     public F.Promise<DemoUser> doLink(DemoUser current, BasicProfile to) {
         DemoUser target = null;
 
-        for (DemoUser u : users.values()) {
-            if (u.main.providerId().equals(current.main.providerId()) && u.main.userId()
-                    .equals(current.main.userId())) {
+        for ( DemoUser u: users.values() ) {
+            if ( u.main.providerId().equals(current.main.providerId()) && u.main.userId().equals(current.main.userId()) ) {
                 target = u;
                 break;
             }
         }
 
-        if (target == null) {
+        if ( target == null ) {
             // this should not happen
             throw new RuntimeException("Can't find user : " + current.main.userId());
         }
 
         boolean alreadyLinked = false;
-        for (BasicProfile p : target.identities) {
-            if (p.userId().equals(to.userId()) && p.providerId().equals(to.providerId())) {
+        for ( BasicProfile p : target.identities) {
+            if ( p.userId().equals(to.userId()) && p.providerId().equals(to.providerId())) {
                 alreadyLinked = true;
                 break;
             }
@@ -113,14 +112,14 @@ public class InMemoryUserService extends BaseUserService<DemoUser> {
 
     @Override
     public F.Promise<BasicProfile> doFind(String providerId, String userId) {
-        if (logger.isDebugEnabled()) {
+        if(logger.isDebugEnabled()){
             logger.debug("Finding user " + userId);
         }
         BasicProfile found = null;
 
-        for (DemoUser u : users.values()) {
-            for (BasicProfile i : u.identities) {
-                if (i.providerId().equals(providerId) && i.userId().equals(userId)) {
+        for ( DemoUser u: users.values() ) {
+            for ( BasicProfile i : u.identities ) {
+                if ( i.providerId().equals(providerId) && i.userId().equals(userId) ) {
                     found = i;
                     break;
                 }
@@ -150,9 +149,9 @@ public class InMemoryUserService extends BaseUserService<DemoUser> {
     public F.Promise<BasicProfile> doFindByEmailAndProvider(String email, String providerId) {
         BasicProfile found = null;
 
-        for (DemoUser u : users.values()) {
-            for (BasicProfile i : u.identities) {
-                if (i.providerId().equals(providerId) && i.email().isDefined() && i.email().get().equals(email)) {
+        for ( DemoUser u: users.values() ) {
+            for ( BasicProfile i : u.identities ) {
+                if ( i.providerId().equals(providerId) && i.email().isDefined() && i.email().get().equals(email) ) {
                     found = i;
                     break;
                 }
@@ -169,10 +168,10 @@ public class InMemoryUserService extends BaseUserService<DemoUser> {
 
     @Override
     public void doDeleteExpiredTokens() {
-        Iterator<Map.Entry<String, Token>> iterator = tokens.entrySet().iterator();
-        while (iterator.hasNext()) {
+        Iterator<Map.Entry<String,Token>> iterator = tokens.entrySet().iterator();
+        while ( iterator.hasNext() ) {
             Map.Entry<String, Token> entry = iterator.next();
-            if (entry.getValue().isExpired()) {
+            if ( entry.getValue().isExpired() ) {
                 iterator.remove();
             }
         }
