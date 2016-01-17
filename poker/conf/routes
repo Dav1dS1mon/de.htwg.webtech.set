@@ -13,6 +13,7 @@ GET		/poker					@controllers.Application.index
 GET		/game					@controllers.Application.pokerGame
 GET		/help					@controllers.Application.pokerHelp
 GET		/about					@controllers.Application.pokerAbout
+GET     /play                   @controllers.Application.pokerPlay
 
 
 # Map static resources from the /public folder to the /assets URL path

@@ -32,6 +32,7 @@ import views.html.linkResult;
 import views.html.pokerGame;
 import views.html.pokerHelp;
 import views.html.pokerAbout;
+import views.html.pokerPlay;
 
 
 /**
@@ -138,6 +139,14 @@ public class Application extends Controller {
             logger.debug("access granted to pokerAbout");
         }
         return ok(pokerAbout.render());
+    }
+    
+    @SecuredAction
+    public Result pokerPlay() {
+        if(logger.isDebugEnabled()){
+            logger.debug("access granted to pokerAbout");
+        }
+        return ok(pokerPlay.render());
     }
     
     
