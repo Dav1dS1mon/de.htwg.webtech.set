@@ -5,29 +5,23 @@
 <html>
     <head>
         <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap.min.css")">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <span class="brand" >Poker - Texas Holdem</span>
-                </div>
+        <div class="container">
+            <div class="navbar">
+        
+                <button type="button" class="btn btn-default navbar-btn active"><a href="/poker">Home</a></button>
+                <button type="button" class="btn btn-default navbar-btn"><a href="/game">Game</a></button>
+                <button type="button" class="btn btn-default navbar-btn"><a href="/help">Help</a></button>
+                <button type="button" class="btn btn-default navbar-btn"><a href="/about">About</a></button>
             </div>
-            
-            <div>
-                        <ul>
-                            <li role="presentation" class="active"><a href="/poker">Home</a></li>
-                            <li role="presentation"><a href="game">Game</a></li>
-                            <li role="presentation"><a href="help">Help</a></li>
-                            <li role="presentation"><a href="about">About</a></li>
-                        </ul>
-            </div>
+            <hr style="margin-top:0px; margin-bottom:0px;"/>
         </div>
         
-        <div class="container" style="padding-top:30px">
+        <div class="container">
             @content
         </div>                                         `
     </body>
