@@ -1,8 +1,28 @@
 hr {
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin-top:5px;
+	margin-bottom:5px;
 }
 
 #communityCards {
-    margin-top: 50px;
+    margin-top:50px;
+    border:1px solid;
+}
+
+.playfield {
+    margin-top:20px;
+}
+
+.gameInfo {
+    padding-right:0px;
+    padding-left:30px;
+}
+
+.gameInfo h3 {
+    font-size:18px;
+}
+
+.gameInfo ul {
+    list-style-type:square;
+    padding-left:15px;
+    padding-right:15px;
 }
