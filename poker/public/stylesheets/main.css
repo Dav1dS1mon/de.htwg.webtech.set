@@ -12,6 +12,45 @@ hr {
     margin-top:20px;
 }
 
+.btn-primary {
+    border-color:#000000;
+}
+.round {
+    border-radius:24px;
+}
+
+.playercolor {
+    color:#FFFFFF;
+}
+
+.bluebtn {
+    background-color:BLUE;
+}
+.greenbtn {
+    background-color:GREEN;
+}
+
+.yellowbtn {
+    background-color:YELLOW;
+}
+.redbtn {
+    background-color:RED;
+}
+.orangebtn {
+    background-color:ORANGE;
+}
+.purplebtn {
+    background-color:PURPLE;
+}
+.blackbtn {
+    background-color:BLACK;
+}
+
+.greybtn {
+    background-color:DARKSLATEGRAY;
+}
+
+
 .gameInfo {
     padding-right:0px;
     padding-left:30px;
