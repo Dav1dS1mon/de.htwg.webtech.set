@@ -6,17 +6,17 @@
     <head>
         <title>@title</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="shortcut icon" type="image/png" href='@routes.Assets.at("images/favicon.png")'>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     </head>
     <body>
         <div class="container">
-            <div class="navbar">
+            <div class="nav nav-tabs">
         
-                <button type="button" class="btn btn-default navbar-btn active"><a href="/poker">Home</a></button>
-                <button type="button" class="btn btn-default navbar-btn"><a href="/game">Game</a></button>
-                <button type="button" class="btn btn-default navbar-btn"><a href="/help">Help</a></button>
-                <button type="button" class="btn btn-default navbar-btn"><a href="/about">About</a></button>
+                <li><a href="/poker">Home</a></li>
+                <li><a href="/game">Game</a></li>
+                <li><a href="/help">Help</a></li>
+                <li><a href="/about">About</a></li>
             </div>
             <hr style="margin-top:0px; margin-bottom:0px;"/>
         </div>
@@ -26,4 +26,3 @@
         </div>                                         `
     </body>
 </html>
-
