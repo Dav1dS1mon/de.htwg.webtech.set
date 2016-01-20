@@ -22,7 +22,7 @@ import securesocial.core.providers._
 import scala.collection.immutable.ListMap
 
 class MyEnvironment extends RuntimeEnvironment.Default {
-  type U = DemoUser
+  type U = User
 
   override lazy val providers = ListMap(
     include(new GitHubProvider(routes, cacheService, oauth2ClientFor(GitHubProvider.GitHub))),
