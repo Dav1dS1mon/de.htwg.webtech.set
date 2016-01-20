@@ -26,13 +26,9 @@ import securesocial.core.RuntimeEnvironment;
 import securesocial.core.java.SecureSocial;
 import securesocial.core.java.SecuredAction;
 import securesocial.core.java.UserAwareAction;
-import service.DemoUser;
-import views.html.index;
-import views.html.linkResult;
-import views.html.pokerGame;
-import views.html.pokerHelp;
-import views.html.pokerAbout;
-import views.html.pokerPlay;
+import service.User;
+
+import views.html.*;
 
 
 /**
@@ -63,13 +59,13 @@ public class Application extends Controller {
         if(logger.isDebugEnabled()){
             logger.debug("access granted to index");
         }
-        DemoUser user = (DemoUser) ctx().args.get(SecureSocial.USER_KEY);
+        User user = (User) ctx().args.get(SecureSocial.USER_KEY);
         return ok(index.render(user, SecureSocial.env()));
     }
 
     @UserAwareAction
     public Result userAware() {
-        DemoUser demoUser = (DemoUser) ctx().args.get(SecureSocial.USER_KEY);
+        User demoUser = (User) ctx().args.get(SecureSocial.USER_KEY);
         String userName ;
         if ( demoUser != null ) {
             BasicProfile user = demoUser.main;
@@ -93,7 +89,7 @@ public class Application extends Controller {
 
     @SecuredAction
     public Result linkResult() {
-        DemoUser current = (DemoUser) ctx().args.get(SecureSocial.USER_KEY);
+        User current = (User) ctx().args.get(SecureSocial.USER_KEY);
         return ok(linkResult.render(current, current.identities));
     }
 
@@ -107,7 +103,7 @@ public class Application extends Controller {
                 String id;
 
                 if ( maybeUser != null ) {
-                    DemoUser user = (DemoUser) maybeUser;
+                    User user = (User) maybeUser;
                     id = user.main.userId();
                 } else {
                     id = "not available. Please log in.";
