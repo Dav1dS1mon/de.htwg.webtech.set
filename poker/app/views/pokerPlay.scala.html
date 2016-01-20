@@ -4,23 +4,11 @@
 	<div class="playfield">
         <div class="col-md-8">
             <div class="row">
-            	<div class="col-md-3">
-            	    <p class="btn btn-primary btn-block round playercolor bluebtn">XPlayer1</p>
+            	<div class="col-md-3" ng-repeat="player in ['Mike', 'Max', 'Joey', 'Dennis']">
+            	    <p class="btn btn-primary btn-block round playercolor bluebtn text-center">{{player}}</p>
             	    <p class="text-center stack">4000</p>
             	    <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
             	    <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
-            	</div>
-            	<div class="col-md-3" >
-            	    <button class="btn btn-primary btn-block round playercolor greenbtn">XPlayer2</button>
-            	    <div>Stack: #STACK-PLAYER2</div>
-            	</div>
-            	<div class="col-md-3" >
-            	    <p class="btn btn-primary btn-block round playercolor yellowbtn">XPlayer3</p>
-            	    <div>Stack: #STACK-PLAYER3</div>
-            	</div>
-            	<div class="col-md-3" >
-            	    <p class="btn btn-primary btn-block round playercolor redbtn">XPlayer4</p>
-            	    <div>Stack: #STACK-PLAYER4</div>
             	</div>
             </div>
         </div>
@@ -46,22 +34,11 @@
         
         <div class="col-md-8">
             <div class="row">
-            	<div class="col-md-3" >
-            	    <p class="btn btn-primary btn-block round playercolor purplebtn">XPlayer5</p>
-            	    <div>Stack: #STACK-PLAYER5</div>
-            	    <!--<div class="playercard"><img src="assets/images/Cards/poker.png"/></div>-->
-            	</div>
-            	<div class="col-md-3" >
-            	    <button class="btn btn-primary btn-block round playercolor orangebtn">XPlayer6</button>
-            	    <div>Stack: #STACK-PLAYER6</div>
-            	</div>
-            	<div class="col-md-3" >
-            	    <p class="btn btn-primary btn-block round playercolor blackbtn">XPlayer7</p>
-            	    <div>Stack: #STACK-PLAYER7</div>
-            	</div>
-            	<div class="col-md-3" >
-            	    <p class="btn btn-primary btn-block round playercolor greybtn">XPlayer8</p>
-            	    <div>Stack: #STACK-PLAYER8</div>
+            	<div class="col-md-3" ng-repeat="player in ['Mike', 'Max', 'Joey', 'Dennis']">
+            	    <p class="btn btn-primary btn-block round playercolor bluebtn">{{player}}</p>
+            	    <p class="text-center stack">4000</p>
+            	    <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
+            	    <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
             	</div>
             </div>
         </div>
