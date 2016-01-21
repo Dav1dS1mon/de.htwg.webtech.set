@@ -117,7 +117,7 @@ public class Lobby extends Controller {
 	public String getPlayer() {
 		StringBuilder sb = new StringBuilder();
 		for (Entry<User, WebSocket<String>> entry  : players.entrySet()) {
-			sb.append(entry.getKey().getName() + ";");
+			sb.append(entry.getKey().getName() + " ");
 		}
 		return sb.toString();
 	}
