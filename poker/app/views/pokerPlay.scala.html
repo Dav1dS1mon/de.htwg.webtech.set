@@ -2,6 +2,7 @@
 
 <link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'/>
 <script src='@routes.Assets.at("javascript/websocket.js")'></script>
+<script src='@routes.Assets.at("javascript/chat.js")'></script>
 	<div class="playfield">
         <div class="col-md-8">
             <div class="row">
@@ -33,6 +34,15 @@
                 <li>Big Blind: #PLAYERX - #BIGBLIND</li>
                 <li>Small Blind: #PLAYERX - #SMALLBLIND</li>
             </ul>
+            <div class="chat">
+                <div id="chat-area"></div>
+            
+                 <form id="send-message-form">
+                     <p>Your message: </p>
+                     <textarea id="send-message-box" maxlength = '100' >
+                     </textarea>
+                 </form>
+            </div>
         </div>
         
         <div id="communityCards" class="col-md-8">
@@ -73,46 +83,5 @@
             <button>Fold</button>
             <button>Give up and chicken out!</button>
         </div>
-        
-        <script>
-             $(function() {
-                    updateChat('Connecting...');
-                    Server = new FancyWebSocket('ws://' + location.host + '/socket');
-                    // watch textarea for release of key press
-                     $('#send-message-box').keyup(function(e) {
-                    if (e.keyCode == 13) { //Enter is pressed
-                        var text = $(this).val();
-                        sendChat( text );
-                        $(this).val('');
-                    }
-            });
-            //Log any messages sent from server
-            Server.bind('message', function( message ) {
-                updateChat( message );
-            });
-            
-            Server.connect();
-            });
-
-            var Server;
-            function updateChat( message ) {
-                $('#chat-area').append($("<p>"+ message +"</p>"));
-                document.getElementById('chat-area').scrollTop =
-                document.getElementById('chat-area').scrollHeight;
-            }
-            
-            function sendChat( message ) {
-                Server.send( 'message', message );
-            }
-            
-         </script>
-        <div id="chat-area"></div>
-    
-         <form id="send-message-form">
-             <p>Your message: </p>
-             <textarea id="send-message-box" maxlength = '100' >
-             </textarea>
-         </form>
-
 	</div>
 }
