@@ -101,7 +101,7 @@ public class Application extends Controller {
     }
     
     @SecuredAction
-    public WebSocket<JsonNode> getSocket() {
+    public WebSocket<String> getSocket() {
         User user = (User) ctx().args.get(SecureSocial.USER_KEY);
 //        if (user == null)
 //        	return WebSocket<JsonNode>.reject(Results.unauthorized("Player not authorized!"));

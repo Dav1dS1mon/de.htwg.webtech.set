@@ -12,6 +12,7 @@ import play.libs.F;
 import play.libs.F.Callback;
 import play.mvc.Controller;
 import play.mvc.WebSocket;
+import play.mvc.WebSocket.Out;
 import securesocial.core.RuntimeEnvironment;
 import service.User;
 
@@ -21,9 +22,9 @@ public class RoomController extends Controller {
 	PokerController controller;
 	String roomName;
 	
-	Map<User, WebSocket<JsonNode>> playerList = new HashMap<User, WebSocket<JsonNode>>();
-	Map<User, WebSocket.In<JsonNode>> inputChannels = new HashMap<User, WebSocket.In<JsonNode>>();
-	Map<User, WebSocket.Out<JsonNode>> outputChannels = new HashMap<User, WebSocket.Out<JsonNode>>();
+	Map<User, WebSocket<String>> playerList = new HashMap<User, WebSocket<String>>();
+	Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
+	Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
 	
 	public RoomController(PokerController controller, String roomName) {
 		this.controller = controller;
@@ -46,7 +47,7 @@ public class RoomController extends Controller {
 	}
 	
 	public String getPlayerNameBySocket(WebSocket ws) {
-		for (Entry<User, WebSocket<JsonNode>> entry  : playerList.entrySet()) {
+		for (Entry<User, WebSocket<String>> entry  : playerList.entrySet()) {
 			if(entry.getValue() == ws) {
 				return entry.getKey().main.toString();
 			}
@@ -55,19 +56,19 @@ public class RoomController extends Controller {
 	}
 	
 	// Websocket interface
-    public WebSocket<JsonNode> getSocket(final User user){
-        return new WebSocket<JsonNode>(){
+    public WebSocket<String> getSocket(final User user){
+        return new WebSocket<String>(){
             
             // called when websocket handshake is done
 			@Override
-			public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out) {
+			public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
 				System.out.println("onReady called!!!!");
 				initSocket(user, in, out);
 			}
         };
     }
     
-    private void initSocket(final User user, WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out) {
+    private void initSocket(final User user, WebSocket.In<String> in, WebSocket.Out<String> out) {
     	inputChannels.put(user, in);
     	outputChannels.put(user, out);
     	
@@ -79,12 +80,13 @@ public class RoomController extends Controller {
 			}
 		});
     	
-    	in.onMessage(new F.Callback<JsonNode>() {
+    	in.onMessage(new F.Callback<String>() {
 
 			@Override
-			public void invoke(JsonNode request) throws Throwable {
-				System.out.println("in.onMessage invoked!!!!");
-				playerRequest(request);
+			public void invoke(String request) throws Throwable {
+				System.out.println("in.onMessage invoked! Message: " + request);
+				//playerRequest(request);
+				updateAll(request);
 			}
     		
 		});
@@ -96,11 +98,20 @@ public class RoomController extends Controller {
     	playerList.remove(user);
     }
     
-    public void playerRequest(JsonNode request) {
+    public void playerRequest(String request) {
     	/* TODO: 	Check for Command of Request
     	 *			'check' and other ones
     	 */
     	
+    }
+    
+    public void updateAll(String request) {
+    	int count = 0;
+		for (Out<String> channel : outputChannels.values()) {
+			count++;
+			channel.write(request);
+		}
+		System.out.println("updateAll was sent to " + count + " clients");
     }
     
 }
