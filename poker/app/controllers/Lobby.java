@@ -13,6 +13,7 @@ import play.Logger;
 import play.libs.F;
 import play.libs.F.Callback;
 import play.mvc.Controller;
+import play.mvc.Result;
 import play.mvc.WebSocket;
 import play.mvc.WebSocket.Out;
 import securesocial.core.RuntimeEnvironment;
@@ -111,6 +112,14 @@ public class Lobby extends Controller {
 			}
 		}
 		return lobbyName;
+	}
+
+	public String getPlayer() {
+		StringBuilder sb = new StringBuilder();
+		for (Entry<User, WebSocket<String>> entry  : players.entrySet()) {
+			sb.append(entry.getKey().getName() + ";");
+		}
+		return sb.toString();
 	}
     
 }

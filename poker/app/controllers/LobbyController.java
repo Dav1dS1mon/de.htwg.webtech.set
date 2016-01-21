@@ -104,4 +104,17 @@ public class LobbyController extends Controller {
         logger.debug("[LobbyController:getSocket] ...player not found. Player didn't joined a lobby. Rejecting WebSocket.");
         return WebSocket.reject(Results.badRequest("Player didn't joined a game."));
     }
+    
+    @SecuredAction
+    public Result getPlayersInLobby() {
+    	User player = (User) SecureSocial.currentUser(env).get(100);
+    	
+    	for (String lobbyName : lobbys.keySet()) {
+    		if (lobbys.get(lobbyName).containsPlayer(player)) {
+    			return ok(lobbys.get(lobbyName).getPlayer());
+    		}
+    	}
+    	
+    	return ok("Lobby has no players");
+    }
 }
