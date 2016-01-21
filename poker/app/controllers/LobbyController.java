@@ -28,7 +28,7 @@ import service.User;
 import views.html.*;
 
 public class LobbyController extends Controller {
-    public static Logger.ALogger logger = Logger.of("application.controllers.Application");
+    public static Logger.ALogger logger = Logger.of("application.controllers.LobbyController");
     private RuntimeEnvironment env;
     private static final String DEFAULT_LOBBY_NAME = "public";
     
@@ -43,8 +43,6 @@ public class LobbyController extends Controller {
     @Inject()
     public LobbyController (RuntimeEnvironment env) {
         this.env = env;
-        
-        System.out.println("Application injected()");
     }
 	
 	@SecuredAction
@@ -57,19 +55,28 @@ public class LobbyController extends Controller {
 	
 	@SecuredAction
 	public Result play(String lobbyName) {
+		logger.debug("[LobbyController:play] Play function called");
 		if (lobbyName.equals("")) {
 			lobbyName = DEFAULT_LOBBY_NAME;
 		}
-
+//a
 		User user = (User) ctx().args.get(SecureSocial.USER_KEY);
+		logger.debug("!!!!!!!!!!!!!" + user.getId());
 		
 		synchronized (lobbys) {
 			if (!lobbys.containsKey(lobbyName)) {
 				// Lobby does not exist
+				logger.debug("[LobbyController:play] Lobby '" + lobbyName + "' does not exist. Creating new one.");
 				lobbys.put(lobbyName, new Lobby(lobbyName));
+				
+				logger.debug("[LobbyController:play] Adding player to lobby '" + lobbyName + "'");;
+				lobbys.get(lobbyName).addPlayer(user);
 			} else {
 				// Player is not already in Lobby
 				if (!lobbys.get(lobbyName).containsPlayer(user)) {
+					logger.debug("[LobbyController:play] Lobby '" + lobbyName + "' exists but player is not in lobby.");;
+					
+					logger.debug("[LobbyController:play] Adding player to lobby '" + lobbyName + "'");;
 					lobbys.get(lobbyName).addPlayer(user);
 				}
 			}
@@ -80,15 +87,21 @@ public class LobbyController extends Controller {
 
     @SecuredAction
     public WebSocket<String> getSocket() {
-        User player = (User) ctx().args.get(SecureSocial.USER_KEY);
+        //User player = (User) ctx().args.get(SecureSocial.USER_KEY);
+    	User player = (User) SecureSocial.currentUser(env).get(100);
+        logger.debug("[LobbyController:getSocket] getSocket callde from User: ");
 
         synchronized (lobbys) {
+        	logger.debug("[LobbyController:getSocket] Checking all lobbys:");
         	for (String lobbyName : lobbys.keySet()) {
+        		logger.debug("[LobbyController:getSocket] ..." + lobbyName + "...");
         		if (lobbys.get(lobbyName).containsPlayer(player)) {
+        			logger.debug("[LobbyController:getSocket] ...player found! Returning WebSocket for this player");
         			return lobbys.get(lobbyName).getSocketForPlayer(player);
         		}
         	}
         }
+        logger.debug("[LobbyController:getSocket] ...player not found. Player didn't joined a lobby. Rejecting WebSocket.");
         return WebSocket.reject(Results.badRequest("Player didn't joined a game."));
     }
 }

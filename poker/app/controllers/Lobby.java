@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 
 import de.htwg.se.texasholdem.controller.PokerController;
 import de.htwg.se.texasholdem.controller.imp.PokerControllerImp;
+import play.Logger;
 import play.libs.F;
 import play.libs.F.Callback;
 import play.mvc.Controller;
@@ -18,57 +19,36 @@ import securesocial.core.RuntimeEnvironment;
 import service.User;
 
 public class Lobby extends Controller {
-	private RuntimeEnvironment env;
+	public static Logger.ALogger logger = Logger.of("application.controllers.Lobby");
 	
 	PokerController controller;
-	String roomName;
+	String lobbyName;
 	
 	Map<User, WebSocket<String>> players = new HashMap<User, WebSocket<String>>();
 	Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
 	Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
 	
-	public Lobby(String roomName) {
+	public Lobby(String lobbyName) {
+		logger.debug("[Lobby:Lobby] Create new Lobby with name '" + lobbyName + "'");
 		this.controller = new PokerControllerImp();
-		this.roomName = roomName;
+		this.lobbyName = lobbyName;
 	}
-	
-	   /**
-     * A constructor needed to get a hold of the environment instance.
-     * This could be injected using a DI framework instead too.
-     *
-     * @param env
-     */
-    @Inject()
-    public Lobby (RuntimeEnvironment env) {
-        this.env = env;
-    }
-	
-	public void addPlayer(User user) {
-		players.put(user, getSocket(user));
+
+	public void addPlayer(User player) {
+		logger.debug("[Lobby:addPlayer] Add player to lobby '" + this.lobbyName + "'");
+		players.put(player, getSocketForPlayer(player));
 	}
-	
-	// Websocket interface
-    public WebSocket<String> getSocket(final User user){
-        return new WebSocket<String>(){
-            
-            // called when websocket handshake is done
-			@Override
-			public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-				System.out.println("onReady called!");
-				initSocket(user, in, out);
-			}
-        };
-    }
     
-    private void initSocket(final User user, WebSocket.In<String> in, WebSocket.Out<String> out) {
-    	inputChannels.put(user, in);
-    	outputChannels.put(user, out);
+    private void initSocket(final User player, WebSocket.In<String> in, WebSocket.Out<String> out) {
+    	inputChannels.put(player, in);
+    	outputChannels.put(player, out);
     	
     	in.onClose(new F.Callback0() {
 			@Override
 			public void invoke() throws Throwable {
-				System.out.println("Player " + user.getName());
-				userLeftRoom(user);
+				logger.debug("[Lobby:initSocket] in.onClose called from player " + player.toString());
+				userLeftRoom(player);
+				logger.debug("[Lobby:initSocket] remaining players in Lobby: " + players.toString());
 			}
 		});
     	
@@ -76,7 +56,7 @@ public class Lobby extends Controller {
 
 			@Override
 			public void invoke(String request) throws Throwable {
-				System.out.println("in.onMessage invoked! Message: " + request);
+				logger.debug("[Lobby:initSocket] in.onMessage invoked. Message: " + request);
 				//playerRequest(request);
 				updateAll(request);
 			}
@@ -103,14 +83,19 @@ public class Lobby extends Controller {
 			count++;
 			channel.write(request);
 		}
-		System.out.println("updateAll was sent to " + count + " clients of (out) " + outputChannels.size());
+		logger.debug("[Lobby:updateAll] updateAll was sent to " + count + " clients of (out) " + outputChannels.size());
     }
 
 	public boolean containsPlayer(User player) {
-		return players.containsKey(player);
+		boolean check = players.containsKey(player);
+		logger.debug("[Lobby:containsPlayer] All Players: " + players.toString());
+		logger.debug("[Lobby:containsPlayer] Searched Player: " + player.toString());
+		logger.debug("[Lobby:containsPlayer] containsPlayer called. Returning '" + check + "'");
+		return check;
 	}
 
 	public WebSocket<String> getSocketForPlayer(final User player) {
+		logger.debug("[Lobby:getSocketForPlayer] getSocketForPlayer called. Returnin new socket for player.");
 		return new WebSocket<String>() {
 			@Override
 			public void onReady(final In<String> in, final Out<String> out) {
@@ -125,7 +110,7 @@ public class Lobby extends Controller {
 				return entry.getKey().main.toString();
 			}
 		}
-		return roomName;
+		return lobbyName;
 	}
     
 }

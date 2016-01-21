@@ -53,8 +53,7 @@ public class Application extends Controller {
     @Inject()
     public Application (RuntimeEnvironment env) {
         this.env = env;
-        
-        System.out.println("Application injected()");
+        logger.debug(String.valueOf(env.hashCode()));
     }
     /**
      * This action only gets called if the user is logged in.
