@@ -3,10 +3,11 @@
 # ~~~~
 
 # Home page
-GET        /                    @controllers.Application.index
-GET        /userAware           @controllers.Application.userAware
-GET        /link-result         @controllers.Application.linkResult
-GET        /current-user        @controllers.Application.currentUser
+GET     /                    	@controllers.Application.index
+GET     /userAware           	@controllers.Application.userAware
+GET     /link-result         	@controllers.Application.linkResult
+GET     /current-user        	@controllers.Application.currentUser
+GET		/socket					@controllers.Application.getSocket
 
 # Poker Game
 GET		/poker					@controllers.Application.index

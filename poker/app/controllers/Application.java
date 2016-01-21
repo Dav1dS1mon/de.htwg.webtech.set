@@ -17,15 +17,21 @@
 package controllers;
 
 import com.google.inject.Inject;
+
+import de.htwg.se.texasholdem.controller.imp.PokerControllerImp;
+import de.htwg.se.texasholdem.controller.PokerController;
 import play.Logger;
 import play.libs.F;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Results;
+import play.mvc.WebSocket;
 import securesocial.core.BasicProfile;
 import securesocial.core.RuntimeEnvironment;
 import securesocial.core.java.SecureSocial;
 import securesocial.core.java.SecuredAction;
 import securesocial.core.java.UserAwareAction;
+import com.fasterxml.jackson.databind.JsonNode;
 import service.User;
 
 import views.html.*;
@@ -37,6 +43,7 @@ import views.html.*;
 public class Application extends Controller {
     public static Logger.ALogger logger = Logger.of("application.controllers.Application");
     private RuntimeEnvironment env;
+    private RoomController roomController;
 
     /**
      * A constructor needed to get a hold of the environment instance.
@@ -92,6 +99,17 @@ public class Application extends Controller {
         User current = (User) ctx().args.get(SecureSocial.USER_KEY);
         return ok(linkResult.render(current, current.identities));
     }
+    
+    @SecuredAction
+    public WebSocket<JsonNode> getSocket() {
+        User user = (User) ctx().args.get(SecureSocial.USER_KEY);
+//        if (user == null)
+//        	return WebSocket<JsonNode>.reject(Results.unauthorized("Player not authorized!"));
+//        
+        PokerController pk = new PokerControllerImp();
+        roomController = new RoomController(pk, "Test Room");
+        return roomController.getSocket(user);
+    }
 
     /**
      * Sample use of SecureSocial.currentUser. Access the /current-user to test it
@@ -101,7 +119,7 @@ public class Application extends Controller {
             @Override
             public Result apply(Object maybeUser) throws Throwable {
                 String id;
-
+ 
                 if ( maybeUser != null ) {
                     User user = (User) maybeUser;
                     id = user.main.userId();

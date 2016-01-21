@@ -5,14 +5,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 
 import de.htwg.se.texasholdem.controller.PokerController;
 import play.libs.F;
 import play.libs.F.Callback;
+import play.mvc.Controller;
 import play.mvc.WebSocket;
+import securesocial.core.RuntimeEnvironment;
 import service.User;
 
-public class roomController {
+public class RoomController extends Controller {
+	private RuntimeEnvironment env;
+	
 	PokerController controller;
 	String roomName;
 	
@@ -20,10 +25,21 @@ public class roomController {
 	Map<User, WebSocket.In<JsonNode>> inputChannels = new HashMap<User, WebSocket.In<JsonNode>>();
 	Map<User, WebSocket.Out<JsonNode>> outputChannels = new HashMap<User, WebSocket.Out<JsonNode>>();
 	
-	public roomController(PokerController controller, String roomName) {
+	public RoomController(PokerController controller, String roomName) {
 		this.controller = controller;
 		this.roomName = roomName;
 	}
+	
+	   /**
+     * A constructor needed to get a hold of the environment instance.
+     * This could be injected using a DI framework instead too.
+     *
+     * @param env
+     */
+    @Inject()
+    public RoomController (RuntimeEnvironment env) {
+        this.env = env;
+    }
 	
 	public void addPlayer(User user) {
 		playerList.put(user, getSocket(user));
@@ -38,7 +54,6 @@ public class roomController {
 		return roomName;
 	}
 	
-	
 	// Websocket interface
     public WebSocket<JsonNode> getSocket(final User user){
         return new WebSocket<JsonNode>(){
@@ -46,6 +61,7 @@ public class roomController {
             // called when websocket handshake is done
 			@Override
 			public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out) {
+				System.out.println("onReady called!!!!");
 				initSocket(user, in, out);
 			}
         };
@@ -67,6 +83,7 @@ public class roomController {
 
 			@Override
 			public void invoke(JsonNode request) throws Throwable {
+				System.out.println("in.onMessage invoked!!!!");
 				playerRequest(request);
 			}
     		
