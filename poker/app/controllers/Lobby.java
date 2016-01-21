@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
 import de.htwg.se.texasholdem.controller.PokerController;
+import de.htwg.se.texasholdem.controller.imp.PokerControllerImp;
 import play.libs.F;
 import play.libs.F.Callback;
 import play.mvc.Controller;
@@ -16,18 +17,18 @@ import play.mvc.WebSocket.Out;
 import securesocial.core.RuntimeEnvironment;
 import service.User;
 
-public class RoomController extends Controller {
+public class Lobby extends Controller {
 	private RuntimeEnvironment env;
 	
 	PokerController controller;
 	String roomName;
 	
-	Map<User, WebSocket<String>> playerList = new HashMap<User, WebSocket<String>>();
+	Map<User, WebSocket<String>> players = new HashMap<User, WebSocket<String>>();
 	Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
 	Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
 	
-	public RoomController(PokerController controller, String roomName) {
-		this.controller = controller;
+	public Lobby(String roomName) {
+		this.controller = new PokerControllerImp();
 		this.roomName = roomName;
 	}
 	
@@ -38,21 +39,12 @@ public class RoomController extends Controller {
      * @param env
      */
     @Inject()
-    public RoomController (RuntimeEnvironment env) {
+    public Lobby (RuntimeEnvironment env) {
         this.env = env;
     }
 	
 	public void addPlayer(User user) {
-		playerList.put(user, getSocket(user));
-	}
-	
-	public String getPlayerNameBySocket(WebSocket ws) {
-		for (Entry<User, WebSocket<String>> entry  : playerList.entrySet()) {
-			if(entry.getValue() == ws) {
-				return entry.getKey().main.toString();
-			}
-		}
-		return roomName;
+		players.put(user, getSocket(user));
 	}
 	
 	// Websocket interface
@@ -62,7 +54,7 @@ public class RoomController extends Controller {
             // called when websocket handshake is done
 			@Override
 			public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-				System.out.println("onReady called!!!!");
+				System.out.println("onReady called!");
 				initSocket(user, in, out);
 			}
         };
@@ -95,7 +87,7 @@ public class RoomController extends Controller {
     private void userLeftRoom(final User user) {
     	inputChannels.remove(user);
     	outputChannels.remove(user);
-    	playerList.remove(user);
+    	players.remove(user);
     }
     
     public void playerRequest(String request) {
@@ -111,7 +103,29 @@ public class RoomController extends Controller {
 			count++;
 			channel.write(request);
 		}
-		System.out.println("updateAll was sent to " + count + " clients");
+		System.out.println("updateAll was sent to " + count + " clients of (out) " + outputChannels.size());
     }
+
+	public boolean containsPlayer(User player) {
+		return players.containsKey(player);
+	}
+
+	public WebSocket<String> getSocketForPlayer(final User player) {
+		return new WebSocket<String>() {
+			@Override
+			public void onReady(final In<String> in, final Out<String> out) {
+				initSocket(player, in, out);
+			}
+		};
+	}
+	
+	public String getPlayerNameBySocket(WebSocket ws) {
+		for (Entry<User, WebSocket<String>> entry  : players.entrySet()) {
+			if(entry.getValue() == ws) {
+				return entry.getKey().main.toString();
+			}
+		}
+		return roomName;
+	}
     
 }
