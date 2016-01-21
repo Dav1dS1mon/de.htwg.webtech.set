@@ -43,7 +43,6 @@ import views.html.*;
 public class Application extends Controller {
     public static Logger.ALogger logger = Logger.of("application.controllers.Application");
     private RuntimeEnvironment env;
-    private RoomController roomController;
 
     /**
      * A constructor needed to get a hold of the environment instance.
@@ -54,6 +53,7 @@ public class Application extends Controller {
     @Inject()
     public Application (RuntimeEnvironment env) {
         this.env = env;
+        logger.debug(String.valueOf(env.hashCode()));
     }
     /**
      * This action only gets called if the user is logged in.
@@ -100,16 +100,7 @@ public class Application extends Controller {
         return ok(linkResult.render(current, current.identities));
     }
     
-    @SecuredAction
-    public WebSocket<String> getSocket() {
-        User user = (User) ctx().args.get(SecureSocial.USER_KEY);
-//        if (user == null)
-//        	return WebSocket<JsonNode>.reject(Results.unauthorized("Player not authorized!"));
-//        
-        PokerController pk = new PokerControllerImp();
-        roomController = new RoomController(pk, "Test Room");
-        return roomController.getSocket(user);
-    }
+
 
     /**
      * Sample use of SecureSocial.currentUser. Access the /current-user to test it
