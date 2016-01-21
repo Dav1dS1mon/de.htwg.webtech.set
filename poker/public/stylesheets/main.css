@@ -62,7 +62,7 @@ hr {
     background-color:DARKSLATEGRAY;
 }
 
-
+/* sidebar */
 .gameInfo {
     padding-right:0px;
     padding-left:30px;
@@ -76,4 +76,19 @@ hr {
     list-style-type:square;
     padding-left:15px;
     padding-right:15px;
+}
+
+#chat-area {
+    margin-bottom: 5px;
+    padding: 5px;
+    width: 100%;
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-radius: 10px;
+    border-style: solid;
+}
+
+#send-message-box {
+    width: 100%;
 }

@@ -22,8 +22,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemoUser implements Serializable {
-    public DemoUser(BasicProfile user) {
+public class User implements Serializable {
+    public User(BasicProfile user) {
         this.main = user;
         identities = new ArrayList<BasicProfile>();
         identities.add(user);
@@ -31,4 +31,21 @@ public class DemoUser implements Serializable {
 
     public BasicProfile main;
     public List<BasicProfile> identities;
+    
+    public String getId() {
+    	if (identities.size() > 0)
+    		return identities.get(0).userId();
+    	return null;
+    }
+    
+    @Override
+    public String toString() {
+    	return getName() + " (" + main.userId() + ")";
+    }
+    
+    public String getName() {
+    	if (main.fullName().isDefined())
+    		return (String) main.fullName().get();
+    	return "Unnamed User";
+    }
 }
