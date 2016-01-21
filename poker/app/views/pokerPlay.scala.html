@@ -75,7 +75,7 @@
         <script>
              $(function() {
                     updateChat('Connecting...');
-                    Server = new FancyWebSocket('ws://' + location.host);
+                    Server = new FancyWebSocket('ws://' + location.host + '/socket');
                     // watch textarea for release of key press
                      $('#send-message-box').keyup(function(e) {
                     if (e.keyCode == 13) { //Enter is pressed
