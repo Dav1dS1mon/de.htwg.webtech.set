@@ -3,6 +3,7 @@ package controllers;
 import com.google.inject.Inject;
 
 import de.htwg.se.texasholdem.controller.imp.PokerControllerImp;
+import model.Lobby;
 import de.htwg.se.texasholdem.controller.PokerController;
 import play.Logger;
 import play.libs.F;
@@ -88,7 +89,7 @@ public class LobbyController extends Controller {
 	}
 
     @SecuredAction
-    public WebSocket<JsonNode> getSocket() {
+    public WebSocket<String> getSocket() {
         //User player = (User) ctx().args.get(SecureSocial.USER_KEY);
     	User player = (User) SecureSocial.currentUser(env).get(100);
         logger.debug("[LobbyController:getSocket] getSocket callde from User: ");

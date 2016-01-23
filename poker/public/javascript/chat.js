@@ -4,10 +4,10 @@ $(function() {
         // watch textarea for release of key press
          $('#send-message-box').keyup(function(e) {
         if (e.keyCode == 13) { //Enter is pressed
-            var text = {
-                chat: $(this).val()
-            };
-            sendChat( text );
+			var text = "{command: \"chat\", value: \"" + $(this).val() + "\"}";
+
+			Server.send("Blubb", text);
+            console.log(text);
             $(this).val('');
             }
         });
@@ -28,5 +28,7 @@ function updateChat( message ) {
 }
 
 function sendChat( message ) {
-    Server.send( 'message', message );
+    Server.send(JSON.stringify(message));
+    console.log("Json message: ");
+    console.log(JSON.stringify(message));
 }
