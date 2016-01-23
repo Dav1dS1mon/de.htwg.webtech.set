@@ -59,11 +59,13 @@ public class LobbyController extends Controller {
 		if (lobbyName.equals("")) {
 			lobbyName = DEFAULT_LOBBY_NAME;
 		}
-//a
+		
 		User user = (User) ctx().args.get(SecureSocial.USER_KEY);
-		logger.debug("!!!!!!!!!!!!!" + user.getId());
 		
 		synchronized (lobbys) {
+			// TODO: Check if Player is already in other lobby
+			
+			
 			if (!lobbys.containsKey(lobbyName)) {
 				// Lobby does not exist
 				logger.debug("[LobbyController:play] Lobby '" + lobbyName + "' does not exist. Creating new one.");
@@ -86,7 +88,7 @@ public class LobbyController extends Controller {
 	}
 
     @SecuredAction
-    public WebSocket<String> getSocket() {
+    public WebSocket<JsonNode> getSocket() {
         //User player = (User) ctx().args.get(SecureSocial.USER_KEY);
     	User player = (User) SecureSocial.currentUser(env).get(100);
         logger.debug("[LobbyController:getSocket] getSocket callde from User: ");

@@ -25,9 +25,9 @@ public class Lobby extends Controller {
 	PokerController controller;
 	String lobbyName;
 	
-	Map<User, WebSocket<String>> players = new HashMap<User, WebSocket<String>>();
-	Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
-	Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
+	Map<User, WebSocket<JsonNode>> players = new HashMap<User, WebSocket<JsonNode>>();
+	Map<User, WebSocket.In<JsonNode>> inputChannels = new HashMap<User, WebSocket.In<JsonNode>>();
+	Map<User, WebSocket.Out<JsonNode>> outputChannels = new HashMap<User, WebSocket.Out<JsonNode>>();
 	
 	public Lobby(String lobbyName) {
 		logger.debug("[Lobby:Lobby] Create new Lobby with name '" + lobbyName + "'");
@@ -40,7 +40,7 @@ public class Lobby extends Controller {
 		players.put(player, getSocketForPlayer(player));
 	}
     
-    private void initSocket(final User player, WebSocket.In<String> in, WebSocket.Out<String> out) {
+    private void initSocket(final User player, WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out) {
     	inputChannels.put(player, in);
     	outputChannels.put(player, out);
     	
@@ -53,10 +53,10 @@ public class Lobby extends Controller {
 			}
 		});
     	
-    	in.onMessage(new F.Callback<String>() {
+    	in.onMessage(new F.Callback<JsonNode>() {
 
 			@Override
-			public void invoke(String request) throws Throwable {
+			public void invoke(JsonNode request) throws Throwable {
 				logger.debug("[Lobby:initSocket] in.onMessage invoked. Message: " + request);
 				//playerRequest(request);
 				updateAll(request);
@@ -78,9 +78,9 @@ public class Lobby extends Controller {
     	
     }
     
-    public void updateAll(String request) {
+    public void updateAll(JsonNode request) {
     	int count = 0;
-		for (Out<String> channel : outputChannels.values()) {
+		for (Out<JsonNode> channel : outputChannels.values()) {
 			count++;
 			channel.write(request);
 		}
@@ -95,18 +95,18 @@ public class Lobby extends Controller {
 		return check;
 	}
 
-	public WebSocket<String> getSocketForPlayer(final User player) {
+	public WebSocket<JsonNode> getSocketForPlayer(final User player) {
 		logger.debug("[Lobby:getSocketForPlayer] getSocketForPlayer called. Returnin new socket for player.");
-		return new WebSocket<String>() {
+		return new WebSocket<JsonNode>() {
 			@Override
-			public void onReady(final In<String> in, final Out<String> out) {
+			public void onReady(final In<JsonNode> in, final Out<JsonNode> out) {
 				initSocket(player, in, out);
 			}
 		};
 	}
 	
 	public String getPlayerNameBySocket(WebSocket ws) {
-		for (Entry<User, WebSocket<String>> entry  : players.entrySet()) {
+		for (Entry<User, WebSocket<JsonNode>> entry  : players.entrySet()) {
 			if(entry.getValue() == ws) {
 				return entry.getKey().main.toString();
 			}
@@ -116,7 +116,7 @@ public class Lobby extends Controller {
 
 	public String getPlayer() {
 		StringBuilder sb = new StringBuilder();
-		for (Entry<User, WebSocket<String>> entry  : players.entrySet()) {
+		for (Entry<User, WebSocket<JsonNode>> entry  : players.entrySet()) {
 			sb.append(entry.getKey().getName() + ";");
 		}
 		return sb.toString();
