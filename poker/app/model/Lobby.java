@@ -1,6 +1,9 @@
 package model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 import model.Request;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,7 +30,8 @@ public class Lobby extends Controller {
 	PokerController controller;
 	String lobbyName;
 	
-	Map<User, WebSocket<String>> players = new HashMap<User, WebSocket<String>>();
+	List<User> players = new LinkedList<User>();
+	List<User> offlinePlayers = new LinkedList<User>();
 	Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
 	Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
 	
@@ -36,13 +40,8 @@ public class Lobby extends Controller {
 		this.controller = new PokerControllerImp();
 		this.lobbyName = lobbyName;
 	}
-
-	public void addPlayer(User player) {
-		logger.debug("[Lobby:addPlayer] Add player to lobby '" + this.lobbyName + "'");
-		players.put(player, getSocketForPlayer(player));
-	}
     
-    private void initSocket(final User player, WebSocket.In<String> in, WebSocket.Out<String> out) {
+    private void initWebSocket(final User player, WebSocket.In<String> in, WebSocket.Out<String> out) {
     	inputChannels.put(player, in);
     	outputChannels.put(player, out);
     	
@@ -50,7 +49,9 @@ public class Lobby extends Controller {
 			@Override
 			public void invoke() throws Throwable {
 				logger.debug("[Lobby:initSocket] in.onClose called from player " + player.toString());
-				userLeftRoom(player);
+				playerLeft(player);
+				inputChannels.remove(player);
+				outputChannels.remove(player);
 				logger.debug("[Lobby:initSocket] remaining players in Lobby: " + players.toString());
 			}
 		});
@@ -65,11 +66,41 @@ public class Lobby extends Controller {
 		});
     }
     
-    private void userLeftRoom(final User user) {
-    	inputChannels.remove(user);
-    	outputChannels.remove(user);
-    	players.remove(user);
+	private void playerLeft(final User player) {
+        offlinePlayers.add(player);
+        new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(60000);
+					if (!offlinePlayers.contains(player))
+						return;
+					logger.info(player.toString() + " still offline. Removing from game.");
+			        removePlayer(player);
+				} catch (InterruptedException consumed) { }
+			}
+		}).start();
+	}
+    
+	public void addPlayer(User player) {
+		logger.debug("[Lobby:addPlayer] Add player '" + player.getName() + "' to lobby '" + this.lobbyName + "'");
+		players.add(player);
+	}
+	
+    public void removePlayer(User player) {
+    	if (containsPlayer(player)) {
+    		logger.debug("[Lobby:removePlayer] Remove player '" + player.getName());
+    		inputChannels.remove(player);
+	    	outputChannels.remove(player);
+	    	
+	    	offlinePlayers.remove(player);
+	    	players.remove(player);
+    	}
     }
+    
+	public boolean containsPlayer(User player) {
+		return players.contains(player);
+	}
     
     public void playerRequest(String request) {
     	try {
@@ -94,39 +125,35 @@ public class Lobby extends Controller {
 		logger.debug("[Lobby:updateAll] updateAll was sent to " + count + " clients of (out) " + outputChannels.size());
     }
 
-	public boolean containsPlayer(User player) {
-		boolean check = players.containsKey(player);
-		logger.debug("[Lobby:containsPlayer] All Players: " + players.toString());
-		logger.debug("[Lobby:containsPlayer] Searched Player: " + player.toString());
-		logger.debug("[Lobby:containsPlayer] containsPlayer called. Returning '" + check + "'");
-		return check;
-	}
-
 	public WebSocket<String> getSocketForPlayer(final User player) {
-		logger.debug("[Lobby:getSocketForPlayer] getSocketForPlayer called. Returnin new socket for player.");
+		logger.debug("[Lobby:getSocketForPlayer] getSocketForPlayer called. Return new socket for player '" + player.getName());
+		if (offlinePlayers.contains(player)) {
+				logger.debug("[Lobby:getSocketForPlayer] '" + player.getName() + "' rejoined the game");
+				offlinePlayers.remove(player);
+		}
 		return new WebSocket<String>() {
 			@Override
 			public void onReady(final In<String> in, final Out<String> out) {
-				initSocket(player, in, out);
+				logger.debug("[Lobby:getSocketForPlayer] onReady called with player '" + player.getName());
+				initWebSocket(player, in, out);
 			}
 		};
 	}
-	
-	public String getPlayerNameBySocket(WebSocket<String> ws) {
-		for (Entry<User, WebSocket<String>> entry  : players.entrySet()) {
-			if(entry.getValue() == ws) {
-				return entry.getKey().main.toString();
-			}
-		}
-		return lobbyName;
-	}
 
+//	public WebSocket<String> getSocketOfPlayer(User player) {
+//		for (Entry<User, WebSocket<String>> entry : players.entrySet()) {
+//			if (entry.getKey() == player) {
+//				return entry.getValue();
+//			}
+//		}
+//		return null;
+//	}
+	
 	public String getPlayer() {
 		StringBuilder sb = new StringBuilder();
-		for (Entry<User, WebSocket<String>> entry  : players.entrySet()) {
-			sb.append(entry.getKey().getName() + ";");
+		for (User p : players) {
+			sb.append(p.toString() + ";");
 		}
 		return sb.toString();
-	}
-    
+	}    
 }

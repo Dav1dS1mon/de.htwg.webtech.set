@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import service.User;
@@ -61,11 +62,17 @@ public class LobbyController extends Controller {
 			lobbyName = DEFAULT_LOBBY_NAME;
 		}
 		
-		User user = (User) ctx().args.get(SecureSocial.USER_KEY);
+		User player = (User) ctx().args.get(SecureSocial.USER_KEY);
 		
 		synchronized (lobbys) {
-			// TODO: Check if Player is already in other lobby
+			// Check if Player is already in other lobby
+			for (Entry<String, Lobby> entry  : lobbys.entrySet()) {
+				if (entry.getValue().containsPlayer(player)) {
+					entry.getValue().removePlayer(player);
+				}
+			}
 			
+			logger.debug("[LobbyController:play] All lobbys: " + lobbys.toString());
 			
 			if (!lobbys.containsKey(lobbyName)) {
 				// Lobby does not exist
@@ -73,31 +80,30 @@ public class LobbyController extends Controller {
 				lobbys.put(lobbyName, new Lobby(lobbyName));
 				
 				logger.debug("[LobbyController:play] Adding player to lobby '" + lobbyName + "'");;
-				lobbys.get(lobbyName).addPlayer(user);
+				lobbys.get(lobbyName).addPlayer(player);
 			} else {
 				// Player is not already in Lobby
-				if (!lobbys.get(lobbyName).containsPlayer(user)) {
+				if (!lobbys.get(lobbyName).containsPlayer(player)) {
 					logger.debug("[LobbyController:play] Lobby '" + lobbyName + "' exists but player is not in lobby.");;
 					
 					logger.debug("[LobbyController:play] Adding player to lobby '" + lobbyName + "'");;
-					lobbys.get(lobbyName).addPlayer(user);
+					lobbys.get(lobbyName).addPlayer(player);
 				}
 			}
 		}
 		
-		return ok(pokerLobby.render(user, SecureSocial.env(), lobbyName));
+		return ok(pokerLobby.render(player, SecureSocial.env(), lobbyName));
 	}
 
     @SecuredAction
     public WebSocket<String> getSocket() {
         //User player = (User) ctx().args.get(SecureSocial.USER_KEY);
     	User player = (User) SecureSocial.currentUser(env).get(100);
-        logger.debug("[LobbyController:getSocket] getSocket callde from User: ");
+        logger.debug("[LobbyController:getSocket] getSocket called from User: ");
 
         synchronized (lobbys) {
-        	logger.debug("[LobbyController:getSocket] Checking all lobbys:");
+        	logger.debug("[LobbyController:getSocket] Checking all lobbys: " + lobbys.keySet().toString());
         	for (String lobbyName : lobbys.keySet()) {
-        		logger.debug("[LobbyController:getSocket] ..." + lobbyName + "...");
         		if (lobbys.get(lobbyName).containsPlayer(player)) {
         			logger.debug("[LobbyController:getSocket] ...player found! Returning WebSocket for this player");
         			return lobbys.get(lobbyName).getSocketForPlayer(player);
@@ -118,6 +124,6 @@ public class LobbyController extends Controller {
     		}
     	}
     	
-    	return ok("Lobby has no players");
+    	return ok("");
     }
 }

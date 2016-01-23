@@ -5,9 +5,8 @@ $(function() {
          $('#send-message-box').keyup(function(e) {
         if (e.keyCode == 13) { //Enter is pressed
 			var text = "{command: \"chat\", value: \"" + $(this).val() + "\"}";
+			sendChat(text)
 
-			Server.send("Blubb", text);
-            console.log(text);
             $(this).val('');
             }
         });
@@ -28,7 +27,7 @@ function updateChat( message ) {
 }
 
 function sendChat( message ) {
-    Server.send(JSON.stringify(message));
+    Server.send("chat", message);
     console.log("Json message: ");
-    console.log(JSON.stringify(message));
+    console.log(message);
 }
