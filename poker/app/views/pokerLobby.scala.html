@@ -8,7 +8,6 @@
 	<link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'/>
 	<script src='@routes.Assets.at("javascript/websocket.js")'></script>
 	<script src='@routes.Assets.at("javascript/chat.js")'></script>
-	<script src='@routes.Assets.at("javascript/common.js")'></script>
 	<div class="page-header">
 		<h2><img src="@user.main.avatarUrl" alt="@user.main.fullName" width="40px" height="40px"/> Welcome @user.main.firstName.getOrElse{@user.main.fullName.getOrElse{User}}</h2>
 	</div>

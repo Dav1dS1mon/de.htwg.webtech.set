@@ -13,7 +13,19 @@ $(function() {
 
     //Log any messages sent from server 
     Server.bind('message', function( message ) {
-        updateChat( message );
+    	var msg = JSON.parse(message);
+    	
+    	switch(msg.command) {
+    		case "updateChat":
+	    		updateChat(msg.value);
+	    		break;
+	    	case "updateLobby":
+	    		var players = msg.value;
+	    		for(var i in players) {
+     			   $('#player-list').append($('<label><input type="checkbox">' + players[i] + '</label><br>'));
+    			}
+    	}
+        
     });
 
     Server.connect();

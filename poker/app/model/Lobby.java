@@ -85,6 +85,7 @@ public class Lobby extends Controller {
 	public void addPlayer(User player) {
 		logger.debug("[Lobby:addPlayer] Add player '" + player.getName() + "' to lobby '" + this.lobbyName + "'");
 		players.add(player);
+		updateLobby();
 	}
 	
     public void removePlayer(User player) {
@@ -95,6 +96,7 @@ public class Lobby extends Controller {
 	    	
 	    	offlinePlayers.remove(player);
 	    	players.remove(player);
+	    	updateLobby();
     	}
     }
     
@@ -108,19 +110,31 @@ public class Lobby extends Controller {
     		Request req = new Gson().fromJson(request, Request.class);
         	logger.debug("[Lobby:playerResponse] Called with: " + req.command + " | " + req.value);
         	
+        	Response res = new Response();
+        	
         	if (req.command.equals("chat")) {
-        		updateAll(req.value);
+        		res.setCommand("updateChat");
+        		res.setChat(req.value);
+        		updateAll(res);
         	}
     	} catch (Exception e) {
     		logger.debug("[Lobby:playerResponse] could not convert string to json: " + e.getMessage()); 
     	}
     }
     
-    public void updateAll(String request) {
+    public void updateLobby() {
+    	Response res = new Response();
+    	res.setCommand("updateLobby");
+    	res.setLobbyPlayerList(players);
+    	
+    	updateAll(res);
+    }
+    
+    public void updateAll(Response response) {
     	int count = 0;
 		for (Out<String> channel : outputChannels.values()) {
 			count++;
-			channel.write(request);
+			channel.write(response.asJson());
 		}
 		logger.debug("[Lobby:updateAll] updateAll was sent to " + count + " clients of (out) " + outputChannels.size());
     }
@@ -136,6 +150,7 @@ public class Lobby extends Controller {
 			public void onReady(final In<String> in, final Out<String> out) {
 				logger.debug("[Lobby:getSocketForPlayer] onReady called with player '" + player.getName());
 				initWebSocket(player, in, out);
+	    		updateLobby();
 			}
 		};
 	}
