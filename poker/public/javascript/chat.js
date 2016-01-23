@@ -4,7 +4,9 @@ $(function() {
         // watch textarea for release of key press
          $('#send-message-box').keyup(function(e) {
         if (e.keyCode == 13) { //Enter is pressed
-            var text = $(this).val();
+            var text = {
+                chat: $(this).val()
+            };
             sendChat( text );
             $(this).val('');
             }

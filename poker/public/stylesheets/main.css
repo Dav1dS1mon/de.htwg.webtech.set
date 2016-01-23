@@ -20,9 +20,8 @@ hr {
 }
 
 .playercard img {
-    width:25%;
-    height:25%;
-    float:right;
+    width:50%;
+    float:left;
 }
 
 .stack {
@@ -88,4 +87,8 @@ hr {
     overflow-x: hidden;
     border-radius: 10px;
     border-style: solid;
+}
+
+#send-message-box {
+    width: 100%;
 }
