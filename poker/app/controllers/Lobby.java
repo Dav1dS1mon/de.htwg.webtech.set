@@ -57,11 +57,9 @@ public class Lobby extends Controller {
 
 			@Override
 			public void invoke(JsonNode request) throws Throwable {
-				logger.debug("[Lobby:initSocket] in.onMessage invoked. Message: " + request);
-				//playerRequest(request);
-				updateAll(request);
+				logger.debug("[Lobby:initSocket] in.onMessage invoked. Message: " + request.toString());
+				playerRequest(request);
 			}
-    		
 		});
     }
     
@@ -71,11 +69,14 @@ public class Lobby extends Controller {
     	players.remove(user);
     }
     
-    public void playerRequest(String request) {
-    	/* TODO: 	Check for Command of Request
-    	 *			'check' and other ones
-    	 */
+    public void playerRequest(JsonNode request) {
+    	String command = request.get("command").textValue();
     	
+    	switch(command) {
+    	case "chat":
+    		updateAll(request);
+    		break;
+    	}
     }
     
     public void updateAll(JsonNode request) {
@@ -105,7 +106,7 @@ public class Lobby extends Controller {
 		};
 	}
 	
-	public String getPlayerNameBySocket(WebSocket ws) {
+	public String getPlayerNameBySocket(WebSocket<JsonNode> ws) {
 		for (Entry<User, WebSocket<JsonNode>> entry  : players.entrySet()) {
 			if(entry.getValue() == ws) {
 				return entry.getKey().main.toString();
