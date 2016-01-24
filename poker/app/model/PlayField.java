@@ -25,11 +25,6 @@ public class PlayField {
 	private int bigBlind;
 	
 	public PlayField(PokerController controller) {
-		controller.addPlayer("Dennis");
-		controller.addPlayer("Markus");
-		controller.addPlayer("Ralf");
-		controller.startGame();
-		
 		for (Player p : controller.getPlayerList()) {
 			
 			Map<String, Object> keyValuePair = new HashMap<String, Object>();

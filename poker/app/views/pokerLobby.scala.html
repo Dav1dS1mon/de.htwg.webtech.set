@@ -7,10 +7,10 @@
 	
 	<link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'/>
 	<script src='@routes.Assets.at("javascript/websocket.js")'></script>
-	<script src='@routes.Assets.at("javascript/chat.js")'></script>
+	<script src='@routes.Assets.at("javascript/ngChat.js")'></script>
 	
 	<h2>Lobby: "@lobby"</h2>
-	<div class="playfield">
+	<div class="playfield" ng-app="ngPokerApp" ng-controller="PokerController">
 	    <div class="col-md-8">
             <div class="row">
                 <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="player in ['Mike', 'Max', 'Joey', 'Dennis']">
@@ -57,15 +57,26 @@
                 <li>Big Blind: #PLAYERX - #BIGBLIND</li>
                 <li>Small Blind: #PLAYERX - #SMALLBLIND</li>
             </ul>
-            <div class="chat">
-                <div id="chat-area"></div>
+            
+            
+            
+            
+            
+            <div>
+                <div height="400px" width="400px">
+                	<p ng-repeat="text in chatArea">{{text}}<br/><p>
+                </div>
             
                  <form id="send-message-form">
                      <p>Your message: </p>
-                     <textarea id="send-message-box">
-                     </textarea>
+                     <input ng-model="message">
+                     <button ng-click="sendMessage()">Send</button>
                  </form>
             </div>
+            
+            
+            
+            
             
             <div id="player-list" class="checkbox"></div>
         </div>
