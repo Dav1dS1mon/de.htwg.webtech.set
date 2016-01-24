@@ -61,7 +61,7 @@ public class Lobby extends Controller {
 			@Override
 			public void invoke(String request) throws Throwable {
 				logger.debug("[Lobby:initSocket] in.onMessage invoked");
-				playerRequest(request);
+				playerRequest(player, request);
 			}
 		});
     }
@@ -104,7 +104,7 @@ public class Lobby extends Controller {
 		return players.contains(player);
 	}
     
-    public void playerRequest(String request) {
+    public void playerRequest(User player, String request) {
     	try {
     		logger.debug("[Lobby:playerResponse] Called with: " + request.getClass().toString() + " text: " + request.toString());
     		Request req = new Gson().fromJson(request, Request.class);
@@ -114,7 +114,7 @@ public class Lobby extends Controller {
         	
         	if (req.command.equals("chat")) {
         		res.setCommand("updateChat");
-        		res.setChat(req.value);
+        		res.setChat(player.getName() + ": " + req.value);
         		updateAll(res);
         	}
     	} catch (Exception e) {
