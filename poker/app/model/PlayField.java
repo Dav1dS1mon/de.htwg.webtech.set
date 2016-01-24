@@ -26,6 +26,8 @@ public class PlayField {
 	private boolean gameOver;
 	private int smallBlind;
 	private int bigBlind;
+	private int currentCallValue;
+	private boolean yourTurn;
 	
 	public PlayField(PokerController controller, User player) {
 		for (Player p : controller.getPlayerList()) {
@@ -61,6 +63,15 @@ public class PlayField {
 		} else {
 			winner = "";
 		}
+		
+		if (player.getName().equals(controller.getCurrentPlayer().getPlayerName())) {
+			yourTurn = true;
+			currentCallValue = controller.getCurrentCallValue();
+		} else {
+			yourTurn = false;
+			currentCallValue = -1;
+		}
+		
 		pot = controller.getGameData().getPot();
 		bettingStatus = controller.getBettingStatus();
 		gameStatus = controller.getStatus();

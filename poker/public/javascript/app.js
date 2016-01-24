@@ -41,6 +41,8 @@ angular.module('ngPokerApp', [])
 	$scope.communityCards;
 	$scope.lobbyPlayer;
 	$scope.raiseValue;
+	$scope.currentCallValue;
+	$scope.yourTurn;
 	
 	$scope.playField = function() {
 		console.log("$scope.playField - sendUpdatePlayField");
@@ -140,6 +142,12 @@ angular.module('ngPokerApp', [])
 		
 		// Community Cards
 		$scope.communityCards = json.value.communityCards;
+		
+		// Current Call Value
+		$scope.currentCallValue = json.value.currentCallValue;
+		
+		// Your Turn
+		$scope.yourTurn = json.value.yourTurn;
 		
 		// active players
 		for (var a in json.value.activePlayers) {

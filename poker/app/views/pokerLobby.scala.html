@@ -67,8 +67,10 @@
         </div>
         <input type="checkbox" ng-model="readyState" ng-change="ready()"/>
         
-        <div class="btn btn-group">
-            <button ng-click="call()">Call/Check</button>
+        
+        
+        <div class="btn btn-group" ng-style="{visibility: yourTurn ? 'visible' : 'hidden'}">
+            <button ng-click="call()">{{currentCallValue > 0 ? 'Call ' + currentCallValue + ' Cr.' : 'Check'}}</button>
             <input ng-model="raiseValue">
             <button ng-click="raise()">Raise</button>
             <button ng-click="fold()">Fold</button>
