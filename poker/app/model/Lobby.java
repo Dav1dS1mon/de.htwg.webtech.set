@@ -30,7 +30,9 @@ public class Lobby extends Controller {
 	
 	private final PokerController controller;
 	private final String lobbyName;
-	private List<User> players = new LinkedList<User>();
+	//private List<User> players = new LinkedList<User>();
+	private Map<User, Boolean> players = new HashMap<User, Boolean>();
+	private List<User> readyPlayers = new LinkedList<User>();
 	private List<User> offlinePlayers = new LinkedList<User>();
 	private Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
 	private Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
@@ -84,7 +86,7 @@ public class Lobby extends Controller {
     
 	public void addPlayer(User player) {
 		logger.debug("[Lobby:addPlayer] Add player '" + player.getName() + "' to lobby '" + this.lobbyName + "'");
-		players.add(player);
+		players.put(player, false);
 		updateLobby();
 	}
 	
@@ -101,7 +103,7 @@ public class Lobby extends Controller {
     }
     
 	public boolean containsPlayer(User player) {
-		return players.contains(player);
+		return players.containsKey(player);
 	}
     
     public void playerRequest(User player, String request) {
@@ -119,6 +121,17 @@ public class Lobby extends Controller {
     		res.setCommand("updatePlayField");
     		res.setGameField(controller);
     		updateAll(res);
+    	} else if (req.command.equals("ready")) {
+    		if (req.value == "true") {
+    			if (!readyPlayers.contains(player)) {
+    				readyPlayers.add(player);
+    			}
+    		} else if (req.value == "false") {
+    			if (readyPlayers.contains(player)) {
+    				readyPlayers.remove(player);
+    			}
+    		}
+    		
     	}
     }
     
@@ -160,13 +173,5 @@ public class Lobby extends Controller {
 	    		updateLobby();
 			}
 		};
-	}
-	
-	public String getPlayer() {
-		StringBuilder sb = new StringBuilder();
-		for (User p : players) {
-			sb.append(p.toString() + ";");
-		}
-		return sb.toString();
-	}    
+	}  
 }

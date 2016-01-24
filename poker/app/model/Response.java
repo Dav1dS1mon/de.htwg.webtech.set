@@ -2,6 +2,8 @@ package model;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -20,11 +22,8 @@ public class Response {
 		data.put("command", command);
 	}
 	
-	public void setLobbyPlayerList(Iterable<User> players) {
-		LinkedList<String> valueList = new LinkedList<String>();
-		for (User player : players)
-			valueList.add(player.getName());
-		data.put("value", valueList);
+	public void setLobbyPlayerList(Map<User, Boolean> players) {
+		data.put("value", players);
 	}
 	
 	public void setGameField(PokerController controller) {
