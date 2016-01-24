@@ -30,8 +30,8 @@ public class Response {
 		data.put("value", readyList);
 	}
 	
-	public void setGameField(PokerController controller) {
-		PlayField gameField = new PlayField(controller);
+	public void setGameField(PokerController controller, User player) {
+		PlayField gameField = new PlayField(controller, player);
 		data.put("value", gameField);
 	}
 	

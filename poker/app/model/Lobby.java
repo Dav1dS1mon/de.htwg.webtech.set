@@ -116,7 +116,12 @@ public class Lobby extends Controller {
     public void playerRequest(User player, String request) {
 		logger.debug("[Lobby:playerResponse] Called with: " + request.getClass().toString() + " text: " + request.toString());
 		Request req = new Gson().fromJson(request, Request.class);
-    	logger.debug("[Lobby:playerResponse] Called with: " + req.command + " | " + req.value);
+		if (!req.value.equals(""))
+		{
+			logger.debug("[Lobby:playerResponse] Called with: " + req.command + " | " + "blubb");
+		} else {
+			logger.debug("[Lobby:playerResponse] Called with: " + req.command);
+		}
     	
     	Response res = new Response();
     	
@@ -125,7 +130,7 @@ public class Lobby extends Controller {
     		res.setChat(player.getName() + ": " + req.value);
     		updateAll(res);
     	} else if (req.command.equals("playField")) {
-    		updatePlayField(res);
+    		updatePlayField(res, player);
     	} else if (req.command.equals("ready")) {
     		if (req.value == "true") {
     			if (!readyPlayers.contains(player)) {
@@ -141,24 +146,28 @@ public class Lobby extends Controller {
 			if (raiseValue >= 0 && controller.getCurrentPlayer().getPlayerName().equals(player.getName())
 					&& controller.getStatus() == GameStatus.RUNNING) {
 				controller.raise(raiseValue);
-				updatePlayField(res);
+				updatePlayField(res, player);
 			}
 		} else if (req.command.equals("call") || req.command.equals("check")) {
+			boolean a = (controller.getCurrentPlayer().getPlayerName().equals(player.getName()));
+			boolean b = (controller.getStatus() == GameStatus.RUNNING);
+			logger.debug("[Lobby:playerResponse] call, player: " + player.getName() + " | " + a + " | " + b);
 			if (controller.getCurrentPlayer().getPlayerName().equals(player.getName()) && controller.getStatus() == GameStatus.RUNNING) {
+				logger.debug("[Lobby:playerResponse] call, player: " + player.getName());
 				controller.call();
-				updatePlayField(res);
+				updatePlayField(res, player);
 			}
 		} else if (req.command.equals("fold")) {
 			if (controller.getCurrentPlayer().getPlayerName().equals(player.getName()) && controller.getStatus() == GameStatus.RUNNING) {
 				controller.fold();
-				updatePlayField(res);
+				updatePlayField(res, player);
 			}
 		}
     }
 
-	private void updatePlayField(Response res) {
+	private void updatePlayField(Response res, User player) {
 		res.setCommand("updatePlayField");
-		res.setGameField(controller);
+		res.setGameField(controller, player);
 		updateAll(res);
 	}
     
