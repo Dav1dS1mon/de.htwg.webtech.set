@@ -123,14 +123,6 @@ public class Application extends Controller {
     }
     
     @SecuredAction
-    public Result pokerGame() {
-        if(logger.isDebugEnabled()){
-            logger.debug("access granted to pokerGame");
-        }
-        return ok(pokerGame.render());
-    }
-    
-    @SecuredAction
     public Result pokerHelp() {
         if(logger.isDebugEnabled()){
             logger.debug("access granted to pokerHelp");
