@@ -19,6 +19,7 @@ import play.libs.F;
 import play.libs.F.Callback;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Results;
 import play.mvc.WebSocket;
 import play.mvc.WebSocket.Out;
 import securesocial.core.RuntimeEnvironment;
@@ -148,6 +149,8 @@ public class Lobby extends Controller {
 		if (offlinePlayers.contains(player)) {
 				logger.debug("[Lobby:getSocketForPlayer] '" + player.getName() + "' rejoined the game");
 				offlinePlayers.remove(player);
+		} else if (players.size() >= 8) {
+			return WebSocket.reject(Results.badRequest("Lobby is already full."));
 		}
 		return new WebSocket<String>() {
 			@Override
