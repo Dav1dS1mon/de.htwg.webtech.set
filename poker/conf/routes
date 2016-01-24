@@ -11,10 +11,8 @@ GET		/socket					@controllers.LobbyController.getSocket
 
 # Poker Game
 GET		/poker					@controllers.Application.index
-GET		/game					@controllers.Application.pokerGame
 GET		/help					@controllers.Application.pokerHelp
 GET		/about					@controllers.Application.pokerAbout
-GET     /play                   @controllers.Application.pokerPlay
 GET		/lobby					@controllers.LobbyController.getPlayersInLobby
 GET		/playGame               @controllers.LobbyController.play(lobbyName: String ?= "")
 GET		/playGame/:lobbyName    @controllers.LobbyController.play(lobbyName: String)
