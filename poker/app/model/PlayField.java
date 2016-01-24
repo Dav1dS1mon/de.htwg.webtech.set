@@ -10,6 +10,8 @@ import de.htwg.se.texasholdem.controller.PokerController;
 import de.htwg.se.texasholdem.model.BettingStatus;
 import de.htwg.se.texasholdem.model.Card;
 import de.htwg.se.texasholdem.model.Player;
+import play.Logger;
+import service.User;
 
 public class PlayField {
 	private Map<String, Map<String, Object>> players = new HashMap<String, Map<String, Object>>();
@@ -24,7 +26,7 @@ public class PlayField {
 	private int smallBlind;
 	private int bigBlind;
 	
-	public PlayField(PokerController controller) {
+	public PlayField(PokerController controller, User player) {
 		for (Player p : controller.getPlayerList()) {
 			
 			Map<String, Object> keyValuePair = new HashMap<String, Object>();
@@ -32,7 +34,8 @@ public class PlayField {
 			
 			List<Card> holeCards = new LinkedList<Card>();
 			for (Card c : p.getHoleCards()) {
-				if (p == controller.getCurrentPlayer()) {
+				Logger.debug(p.getPlayerName() + " == " + player.getName());
+				if (p.getPlayerName().equals(player.getName())) {
 					holeCards.add(c);
 				}				
 			}

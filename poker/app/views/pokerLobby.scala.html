@@ -7,18 +7,17 @@
 	
 	<link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'/>
 	<script src='@routes.Assets.at("javascript/websocket.js")'></script>
-	<script src='@routes.Assets.at("javascript/ngChat.js")'></script>
+	<script src='@routes.Assets.at("javascript/app.js")'></script>
 	
 	<h2>Lobby: "@lobby"</h2>
-	<div class="playfield" ng-app="ngPokerApp" ng-controller="PokerController">
+	<div ng-app="ngPokerApp" ng-controller="PokerController" class="playfield">
 	    <div class="col-md-8">
             <div class="row">
-                <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="player in ['Mike', 'Max', 'Joey', 'Dennis']">
-                    <p class="btn btn-primary btn-block round playercolor bluebtn text-center">{{player}}</p>
-                    <p class="text-center stack">4000</p>
-                    <div class="col-sm-8 col-md-8">
-                        <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
-                        <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="(key, value) in players">
+                    <p class="btn btn-primary btn-block round playercolor bluebtn text-center">{{key}}</p>
+                    <p class="text-center stack">{{value.credits}}</p>
+                    <div ng-repeat="(key2, value2) in value.cards" class="col-sm-8 col-md-8">
+                        <div class="playercard"><img src="assets/images/Cards/{{value2.rank}}_{{value2.suit}}.png"/></div>
                     </div>
                 </div>
             </div>
@@ -33,18 +32,7 @@
                     </div>
                     
                     <div class="col-md-10 col-md-offset-1">
-                        <p>Pot: #POTSIZE</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="player in ['Mike', 'Max', 'Joey', 'Dennis']">
-                    <p class="btn btn-primary btn-block round playercolor bluebtn">{{player}}</p>
-                    <p class="text-center stack">4000</p>
-                    <div class="col-sm-8 col-md-8">
-                        <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
-                        <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
+                        <p>Pot: {{pot}}</p>
                     </div>
                 </div>
             </div>
@@ -54,12 +42,9 @@
             <h3 class="glyphicon glyphicon-info-sign">GAME INFORMATION</h3>
             <ul>
                 <li>Leader: #PLAYERX - #CASH</li>
-                <li>Big Blind: #PLAYERX - #BIGBLIND</li>
-                <li>Small Blind: #PLAYERX - #SMALLBLIND</li>
+                <li>Big Blind: #PLAYERX - {{bigBlind}}</li>
+                <li>Small Blind: #PLAYERX - {{smallBlind}}</li>
             </ul>
-            
-            
-            
             
             
             <div>
@@ -71,18 +56,16 @@
                      <p>Your message: </p>
                      <input ng-model="message">
                      <button ng-click="sendMessage()">Send</button>
+                     <button ng-click="playField()">Update Play Field</button>
                  </form>
             </div>
-            
-            
-            
             
             
             <div id="player-list" class="checkbox"></div>
         </div>
         
         <div class="btn btn-group">
-            <button>Call/Check</button>
+            <button ng-click="call()">Call/Check</button>
             <button>Raise</button>
             <button>Fold</button>
             <button>Give up and chicken out!</button>
