@@ -27,13 +27,12 @@ import service.User;
 public class Lobby extends Controller {
 	public static Logger.ALogger logger = Logger.of("application.controllers.Lobby");
 	
-	PokerController controller;
-	String lobbyName;
-	
-	List<User> players = new LinkedList<User>();
-	List<User> offlinePlayers = new LinkedList<User>();
-	Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
-	Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
+	private final PokerController controller;
+	private final String lobbyName;
+	private List<User> players = new LinkedList<User>();
+	private List<User> offlinePlayers = new LinkedList<User>();
+	private Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
+	private Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
 	
 	public Lobby(String lobbyName) {
 		logger.debug("[Lobby:Lobby] Create new Lobby with name '" + lobbyName + "'");
