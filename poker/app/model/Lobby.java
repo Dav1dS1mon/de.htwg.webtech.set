@@ -104,20 +104,20 @@ public class Lobby extends Controller {
 	}
     
     public void playerRequest(User player, String request) {
-    	try {
-    		logger.debug("[Lobby:playerResponse] Called with: " + request.getClass().toString() + " text: " + request.toString());
-    		Request req = new Gson().fromJson(request, Request.class);
-        	logger.debug("[Lobby:playerResponse] Called with: " + req.command + " | " + req.value);
-        	
-        	Response res = new Response();
-        	
-        	if (req.command.equals("chat")) {
-        		res.setCommand("updateChat");
-        		res.setChat(player.getName() + ": " + req.value);
-        		updateAll(res);
-        	}
-    	} catch (Exception e) {
-    		logger.debug("[Lobby:playerResponse] could not convert string to json: " + e.getMessage()); 
+		logger.debug("[Lobby:playerResponse] Called with: " + request.getClass().toString() + " text: " + request.toString());
+		Request req = new Gson().fromJson(request, Request.class);
+    	logger.debug("[Lobby:playerResponse] Called with: " + req.command + " | " + req.value);
+    	
+    	Response res = new Response();
+    	
+    	if (req.command.equals("chat")) {
+    		res.setCommand("updateChat");
+    		res.setChat(player.getName() + ": " + req.value);
+    		updateAll(res);
+    	} else if (req.command.equals("gameField")) {
+    		res.setCommand("updatePlayField");
+    		res.setGameField(controller);
+    		updateAll(res);
     	}
     }
     
@@ -133,7 +133,12 @@ public class Lobby extends Controller {
     	int count = 0;
 		for (Out<String> channel : outputChannels.values()) {
 			count++;
-			channel.write(response.asJson());
+			try {
+				channel.write(response.asJson());
+			} catch (Exception e) {
+				logger.debug("[Lobby:updateAll] ERROR: Could not convert response to Json: " + e.getMessage());
+			}
+			
 		}
 		logger.debug("[Lobby:updateAll] updateAll was sent to " + count + " clients of (out) " + outputChannels.size());
     }
@@ -153,15 +158,6 @@ public class Lobby extends Controller {
 			}
 		};
 	}
-
-//	public WebSocket<String> getSocketOfPlayer(User player) {
-//		for (Entry<User, WebSocket<String>> entry : players.entrySet()) {
-//			if (entry.getKey() == player) {
-//				return entry.getValue();
-//			}
-//		}
-//		return null;
-//	}
 	
 	public String getPlayer() {
 		StringBuilder sb = new StringBuilder();

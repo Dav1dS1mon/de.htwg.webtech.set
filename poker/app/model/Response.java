@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
+import de.htwg.se.texasholdem.controller.PokerController;
 import service.User;
 
 public class Response {
@@ -24,6 +25,11 @@ public class Response {
 		for (User player : players)
 			valueList.add(player.getName());
 		data.put("value", valueList);
+	}
+	
+	public void setGameField(PokerController controller) {
+		GameField gameField = new GameField(controller);
+		data.put("value", gameField);
 	}
 	
 	public String asJson() {
