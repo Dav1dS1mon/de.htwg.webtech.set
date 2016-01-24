@@ -153,15 +153,6 @@ public class Lobby extends Controller {
 			}
 		};
 	}
-
-//	public WebSocket<String> getSocketOfPlayer(User player) {
-//		for (Entry<User, WebSocket<String>> entry : players.entrySet()) {
-//			if (entry.getKey() == player) {
-//				return entry.getValue();
-//			}
-//		}
-//		return null;
-//	}
 	
 	public String getPlayer() {
 		StringBuilder sb = new StringBuilder();
