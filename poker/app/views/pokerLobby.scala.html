@@ -61,8 +61,8 @@
             </div>
             
             
-        <div id="player-list" ng-repeat="(key, value) in players">            		
-            	<p ng-style="{color: value == 'true' ? 'green' : 'red' }">{{key}}</p>
+        <div id="player-list" ng-repeat="(key, value) in lobbyPlayer">            		
+            	<p ng-style="{color: value ? 'green' : 'red' }">{{key}}</p>
             </div>
         </div>
         <input type="checkbox" ng-model="readyState" ng-change="ready()"/>

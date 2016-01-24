@@ -131,14 +131,10 @@ public class Lobby extends Controller {
     	} else if (req.command.equals("playField")) {
     		updatePlayField(res, player);
     	} else if (req.command.equals("ready")) {
-    		if (req.value == "true") {
-    			if (!readyPlayers.contains(player)) {
-    				readyPlayers.add(player);
-    			}
-    		} else if (req.value == "false") {
-    			if (readyPlayers.contains(player)) {
-    				readyPlayers.remove(player);
-    			}
+    		if (req.value.equals("true")) {
+    			players.put(player, true);
+    		} else if (req.value.equals("false")) {
+    			players.put(player, false);
     		}
     		updateLobby();
     	} else if (req.command.equals("raise")) {

@@ -15,6 +15,8 @@ angular.module('ngPokerApp', [])
 	    		break;
 	    	case "updateLobby":
 				//Update Lobby Player List
+				$scope.lobbyPlayer = jsonResponse.value;
+				$scope.$apply();
 				break;
 			case "updatePlayField":
 				updatePlayField(jsonResponse);
@@ -37,6 +39,7 @@ angular.module('ngPokerApp', [])
 	$scope.bigBlind;
 	$scope.readyState;
 	$scope.communityCards
+	$scope.lobbyPlayer
 	
 	$scope.playField = function() {
 		console.log("$scope.playField - sendUpdatePlayField");
@@ -55,8 +58,6 @@ angular.module('ngPokerApp', [])
 	$scope.ready = function() {
 			var jsonMessage = "{command: ready, value: \"" + $scope.readyState + "\"}";
 			Server.send("ready", jsonMessage);
-			console.log("Player " + $scope.readyState);
-			console.log($scope.readyState);
 	};
 	
 	$scope.call = function () {
