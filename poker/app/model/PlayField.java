@@ -16,6 +16,7 @@ import service.User;
 public class PlayField {
 	private Map<String, Map<String, Object>> players = new HashMap<String, Map<String, Object>>();
 	private List<String> activePlayers = new LinkedList<String>();
+	private List<Card> communityCards = new LinkedList<Card>();
 	private String currentPlayer;
 	private String dealer;
 	private String winner;
@@ -47,6 +48,10 @@ public class PlayField {
 		
 		for (Player p : controller.getActivePlayers()) {
 			activePlayers.add(p.getPlayerName());
+		}
+		
+		for (Card c : controller.getGameData().getCommunityCards()) {
+			communityCards.add(c);
 		}
 		
 		currentPlayer = controller.getCurrentPlayer().getPlayerName();

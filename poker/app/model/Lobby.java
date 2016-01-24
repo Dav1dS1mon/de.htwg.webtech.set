@@ -45,7 +45,6 @@ public class Lobby extends Controller {
 		
 		controller.addPlayer("Dennis");
 		controller.addPlayer("Markus");
-		controller.addPlayer("Ralf");
 		controller.startGame();
 		
 	}
@@ -141,12 +140,13 @@ public class Lobby extends Controller {
     				readyPlayers.remove(player);
     			}
     		}
+    		updateLobby();
     	} else if (req.command.equals("raise")) {
 			int raiseValue = Integer.valueOf(req.value);
 			if (raiseValue >= 0 && controller.getCurrentPlayer().getPlayerName().equals(player.getName())
 					&& controller.getStatus() == GameStatus.RUNNING) {
 				controller.raise(raiseValue);
-				updatePlayField(res, player);
+				playFieldChanged(res);
 			}
 		} else if (req.command.equals("call") || req.command.equals("check")) {
 			boolean a = (controller.getCurrentPlayer().getPlayerName().equals(player.getName()));
@@ -155,20 +155,27 @@ public class Lobby extends Controller {
 			if (controller.getCurrentPlayer().getPlayerName().equals(player.getName()) && controller.getStatus() == GameStatus.RUNNING) {
 				logger.debug("[Lobby:playerResponse] call, player: " + player.getName());
 				controller.call();
-				updatePlayField(res, player);
+				playFieldChanged(res);
 			}
 		} else if (req.command.equals("fold")) {
 			if (controller.getCurrentPlayer().getPlayerName().equals(player.getName()) && controller.getStatus() == GameStatus.RUNNING) {
 				controller.fold();
-				updatePlayField(res, player);
+				playFieldChanged(res);
 			}
 		}
     }
 
+	private void playFieldChanged(Response res) {
+		res.setCommand("playFieldChanged");
+		
+		updateAll(res);
+	}
+
 	private void updatePlayField(Response res, User player) {
 		res.setCommand("updatePlayField");
 		res.setGameField(controller, player);
-		updateAll(res);
+		
+		update(res, player);
 	}
     
     public void updateLobby() {
@@ -188,9 +195,17 @@ public class Lobby extends Controller {
 			} catch (Exception e) {
 				logger.debug("[Lobby:updateAll] ERROR: Could not convert response to Json: " + e.getMessage());
 			}
-			
 		}
 		logger.debug("[Lobby:updateAll] updateAll was sent to " + count + " clients of (out) " + outputChannels.size());
+    }
+    
+    public void update(Response response, User player) {
+		try {
+			outputChannels.get(player).write(response.asJson());
+		} catch (Exception e) {
+			logger.debug("[Lobby:updateAll] ERROR: Could not convert response to Json: " + e.getMessage());
+		}		
+		logger.debug("[Lobby:updateAll] update was sent to " + player.getName());
     }
 
 	public WebSocket<String> getSocketForPlayer(final User player) {

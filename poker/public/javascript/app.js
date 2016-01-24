@@ -19,12 +19,15 @@ angular.module('ngPokerApp', [])
 			case "updatePlayField":
 				updatePlayField(jsonResponse);
 				break;
-			
+			case "playFieldChanged":
+				console.log("playFieldChanged called");
+				$scope.playField();
+				break;
     	}
 	});
 
     Server.connect();
-
+    
 
 	$scope.message = "";
 	$scope.chatArea = [];
@@ -32,11 +35,12 @@ angular.module('ngPokerApp', [])
 	$scope.pot;
 	$scope.smallBlind;
 	$scope.bigBlind;
+	$scope.communityCards;
 	
 	$scope.playField = function() {
-		console.log("sendUpdatePlayField");
+		console.log("$scope.playField - sendUpdatePlayField");
 		var jsonMessage = "{command: playField, value: none}";
-		Server.send("updatePlayField", jsonMessage);
+		Server.send("playField", jsonMessage);
 	};
 	
 	$scope.sendMessage = function() {
@@ -44,7 +48,7 @@ angular.module('ngPokerApp', [])
 	    Server.send("chat", jsonMessage);
 	    console.log("Json message: ");
 	    console.log(jsonMessage);
-		$scope.message = "";
+		$scope.message = "";	
 	};
 	
 	$scope.call = function () {
@@ -58,23 +62,25 @@ angular.module('ngPokerApp', [])
 	
 		var players = json.value.players;
 		$scope.players = json.value.players;
-		console.log($scope.players);
+		//console.log($scope.players);
 		
 		
 		for (var p in players) {
 		
 			//Player name
-			console.log(p);
+			//console.log(p);
 		
 			//Credits
-			console.log(players[p].credits);
+			//console.log(players[p].credits);
 			
 			//Cards
 			cards = players[p].cards;
 			for (var c in cards) {
-				console.log(cards[c].rank + " | " + cards[c].suit);
+				//console.log(cards[c].rank + " | " + cards[c].suit);
 			}
 		}
+		
+		
 		
 		// smallBlind
 		$scope.smallBlind = json.value.smallBlind;
@@ -103,9 +109,12 @@ angular.module('ngPokerApp', [])
 		// current player
 		$scope.currentPlayer = json.value.currentPlayer;
 		
+		// Community Cards
+		$scope.communityCards = json.value.communityCards;
+		
 		// active players
 		for (var a in json.value.activePlayers) {
-			console.log(json.value.activePlayers[a]);
+			//console.log(json.value.activePlayers[a]);
 		}
 		
 		$scope.$apply();
