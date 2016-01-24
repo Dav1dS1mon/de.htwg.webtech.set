@@ -61,7 +61,11 @@
             </div>
             
             
-            <div id="player-list" class="checkbox"></div>
+            <div id="player-list" ng-repeat="(key, value) in players">
+            	<label>
+            		<input type="checkbox" ng-change="ready()" ng-model="dummy"/>
+            	</label> {{key}}
+            </div>
         </div>
         
         <div class="btn btn-group">

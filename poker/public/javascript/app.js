@@ -51,6 +51,13 @@ angular.module('ngPokerApp', [])
 		$scope.message = "";	
 	};
 	
+	$scope.ready = function() {
+		var jsonMessage = "{command: ready, value: true}";
+		Server.send("ready", jsonMessage);
+		// How to know which player is ready?
+		console.log("Player ready!")
+	}
+	
 	$scope.call = function () {
 		var jsonMessage = "{command: call, value: test}";
 	    Server.send("chat", jsonMessage);
