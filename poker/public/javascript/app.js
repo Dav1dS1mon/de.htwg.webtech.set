@@ -32,6 +32,7 @@ angular.module('ngPokerApp', [])
 	$scope.pot;
 	$scope.smallBlind;
 	$scope.bigBlind;
+	$scope.readyState;
 	
 	$scope.playField = function() {
 		console.log("sendUpdatePlayField");
@@ -48,11 +49,11 @@ angular.module('ngPokerApp', [])
 	};
 	
 	$scope.ready = function() {
-		var jsonMessage = "{command: ready, value: true}";
-		Server.send("ready", jsonMessage);
-		// How to know which player is ready?
-		console.log("Player ready!")
-	}
+			var jsonMessage = "{command: ready, value: \"" + $scope.readyState + "\"}";
+			Server.send("ready", jsonMessage);
+			console.log("Player " + $scope.readyState);
+			console.log($scope.readyState);
+	};
 	
 	$scope.call = function () {
 		var jsonMessage = "{command: call, value: test}";
