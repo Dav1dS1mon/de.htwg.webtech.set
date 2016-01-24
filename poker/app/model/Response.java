@@ -28,7 +28,7 @@ public class Response {
 	}
 	
 	public void setGameField(PokerController controller) {
-		GameField gameField = new GameField(controller);
+		PlayField gameField = new PlayField(controller);
 		data.put("value", gameField);
 	}
 	

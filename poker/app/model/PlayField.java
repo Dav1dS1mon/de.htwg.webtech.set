@@ -11,7 +11,7 @@ import de.htwg.se.texasholdem.model.BettingStatus;
 import de.htwg.se.texasholdem.model.Card;
 import de.htwg.se.texasholdem.model.Player;
 
-public class GameField {
+public class PlayField {
 	private Map<String, Map<String, Object>> players = new HashMap<String, Map<String, Object>>();
 	private List<String> activePlayers = new LinkedList<String>();
 	private String currentPlayer;
@@ -24,7 +24,7 @@ public class GameField {
 	private int smallBlind;
 	private int bigBlind;
 	
-	public GameField(PokerController controller) {
+	public PlayField(PokerController controller) {
 		controller.addPlayer("Dennis");
 		controller.addPlayer("Markus");
 		controller.addPlayer("Ralf");

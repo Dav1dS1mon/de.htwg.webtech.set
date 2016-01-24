@@ -114,7 +114,7 @@ public class Lobby extends Controller {
     		res.setCommand("updateChat");
     		res.setChat(player.getName() + ": " + req.value);
     		updateAll(res);
-    	} else if (req.command.equals("gameField")) {
+    	} else if (req.command.equals("playField")) {
     		res.setCommand("updatePlayField");
     		res.setGameField(controller);
     		updateAll(res);
