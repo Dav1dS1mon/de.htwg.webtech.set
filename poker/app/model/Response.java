@@ -23,7 +23,11 @@ public class Response {
 	}
 	
 	public void setLobbyPlayerList(Map<User, Boolean> players) {
-		data.put("value", players);
+		Map<String, Boolean> readyList = new HashMap<String, Boolean>();
+		for (Entry<User, Boolean> entry : players.entrySet()) {
+			readyList.put(entry.getKey().getName(), entry.getValue());
+		}
+		data.put("value", readyList);
 	}
 	
 	public void setGameField(PokerController controller) {
