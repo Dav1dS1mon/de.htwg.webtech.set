@@ -42,11 +42,6 @@ public class Lobby extends Controller {
 		logger.debug("[Lobby:Lobby] Create new Lobby with name '" + lobbyName + "'");
 		this.controller = new PokerControllerImp();
 		this.lobbyName = lobbyName;
-		
-		controller.addPlayer("Dennis");
-		controller.addPlayer("Markus");
-		controller.startGame();
-		
 	}
     
     private void initWebSocket(final User player, WebSocket.In<String> in, WebSocket.Out<String> out) {
@@ -128,8 +123,9 @@ public class Lobby extends Controller {
     		res.setCommand("updateChat");
     		res.setChat(player.getName() + ": " + req.value);
     		updateAll(res);
-    	} else if (req.command.equals("playField")) {
+    	} else if (req.command.equals("playField") && controller.getStatus() == GameStatus.RUNNING) {
     		updatePlayField(res, player);
+    		
     	} else if (req.command.equals("ready")) {
     		if (req.value.equals("true")) {
     			players.put(player, true);
@@ -137,13 +133,16 @@ public class Lobby extends Controller {
     			players.put(player, false);
     		}
     		updateLobby();
+    		checkForGameStart();
+    		
     	} else if (req.command.equals("raise")) {
 			int raiseValue = Integer.valueOf(req.value);
 			if (raiseValue >= 0 && controller.getCurrentPlayer().getPlayerName().equals(player.getName())
 					&& controller.getStatus() == GameStatus.RUNNING) {
 				controller.raise(raiseValue);
-				playFieldChanged(res);
+				playFieldChanged();
 			}
+			
 		} else if (req.command.equals("call") || req.command.equals("check")) {
 			boolean a = (controller.getCurrentPlayer().getPlayerName().equals(player.getName()));
 			boolean b = (controller.getStatus() == GameStatus.RUNNING);
@@ -151,17 +150,35 @@ public class Lobby extends Controller {
 			if (controller.getCurrentPlayer().getPlayerName().equals(player.getName()) && controller.getStatus() == GameStatus.RUNNING) {
 				logger.debug("[Lobby:playerResponse] call, player: " + player.getName());
 				controller.call();
-				playFieldChanged(res);
+				playFieldChanged();
 			}
 		} else if (req.command.equals("fold")) {
 			if (controller.getCurrentPlayer().getPlayerName().equals(player.getName()) && controller.getStatus() == GameStatus.RUNNING) {
 				controller.fold();
-				playFieldChanged(res);
+				playFieldChanged();
 			}
 		}
     }
 
-	private void playFieldChanged(Response res) {
+	private void checkForGameStart() {
+		boolean ready = true;
+		for (Entry<User, Boolean> entry : players.entrySet()) {
+			if (entry.getValue() == false) {
+				ready = false;
+			}
+		}
+		
+		if(ready && controller.getStatus() == GameStatus.INITIALIZATION && players.size() >= 2) {
+			for (Entry<User, Boolean> entry : players.entrySet()) {
+				controller.addPlayer(entry.getKey().getName());
+			}
+			controller.startGame();
+			playFieldChanged();
+		}
+	}
+
+	private void playFieldChanged() {
+		Response res = new Response();
 		res.setCommand("playFieldChanged");
 		
 		updateAll(res);

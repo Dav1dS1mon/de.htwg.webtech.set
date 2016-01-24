@@ -38,8 +38,9 @@ angular.module('ngPokerApp', [])
 	$scope.smallBlind;
 	$scope.bigBlind;
 	$scope.readyState;
-	$scope.communityCards
-	$scope.lobbyPlayer
+	$scope.communityCards;
+	$scope.lobbyPlayer;
+	$scope.raiseValue;
 	
 	$scope.playField = function() {
 		console.log("$scope.playField - sendUpdatePlayField");
@@ -65,8 +66,27 @@ angular.module('ngPokerApp', [])
 	    Server.send("chat", jsonMessage);
 	    console.log("Json message: ");
 	    console.log(jsonMessage);
-	}
+	};
 	
+	$scope.fold = function () {
+		var jsonMessage = "{command: fold, value: none}";
+	    Server.send("chat", jsonMessage);
+	    console.log("Json message: ");
+	    console.log(jsonMessage);
+	};
+	
+	$scope.raise = function () {
+		if ($scope.raiseValue > 0 ) {
+			var jsonMessage = "{command: raise, value: \"" + $scope.raiseValue + "\"}";
+		    Server.send("chat", jsonMessage);
+		    console.log("Json message: ");
+		    console.log(jsonMessage);
+		    $scope.raiseValue = "";
+		} else {
+			alert("Raise value must be greater than 0! Please try again.");
+		}
+	};
+		
 	updatePlayField = function(json) {
 	
 		var players = json.value.players;

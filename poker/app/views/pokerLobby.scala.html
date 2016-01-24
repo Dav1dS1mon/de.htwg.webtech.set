@@ -69,9 +69,9 @@
         
         <div class="btn btn-group">
             <button ng-click="call()">Call/Check</button>
-            <button>Raise</button>
-            <button>Fold</button>
-            <button>Give up and chicken out!</button>
+            <input ng-model="raiseValue">
+            <button ng-click="raise()">Raise</button>
+            <button ng-click="fold()">Fold</button>
         </div>
 	</div>
 }
