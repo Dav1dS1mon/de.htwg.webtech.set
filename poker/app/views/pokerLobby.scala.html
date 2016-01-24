@@ -8,21 +8,71 @@
 	<link rel="stylesheet" href='@routes.Assets.at("stylesheets/main.css")'/>
 	<script src='@routes.Assets.at("javascript/websocket.js")'></script>
 	<script src='@routes.Assets.at("javascript/chat.js")'></script>
-	<div class="page-header">
-		<h2><img src="@user.main.avatarUrl" alt="@user.main.fullName" width="40px" height="40px"/> Welcome @user.main.firstName.getOrElse{@user.main.fullName.getOrElse{User}}</h2>
+	
+	<h2>Lobby: "@lobby"</h2>
+	<div class="playfield">
+	    <div class="col-md-8">
+            <div class="row">
+                <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="player in ['Mike', 'Max', 'Joey', 'Dennis']">
+                    <p class="btn btn-primary btn-block round playercolor bluebtn text-center">{{player}}</p>
+                    <p class="text-center stack">4000</p>
+                    <div class="col-sm-8 col-md-8">
+                        <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
+                        <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div id="communityCards" class="col-md-8">
+                    <div class="col-md-10 col-md-offset-1">
+                        <!--<div class="playercard" ng-repeat="n in[] | range:5">
+                        <img src="assets/images/Cards/poker.png"/>
+                            
+                        </div>-->
+                    </div>
+                    
+                    <div class="col-md-10 col-md-offset-1">
+                        <p>Pot: #POTSIZE</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="player in ['Mike', 'Max', 'Joey', 'Dennis']">
+                    <p class="btn btn-primary btn-block round playercolor bluebtn">{{player}}</p>
+                    <p class="text-center stack">4000</p>
+                    <div class="col-sm-8 col-md-8">
+                        <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
+                        <div class="playercard"><img src="assets/images/Cards/poker.png"/></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 gameInfo"> 
+            <h3 class="glyphicon glyphicon-info-sign">GAME INFORMATION</h3>
+            <ul>
+                <li>Leader: #PLAYERX - #CASH</li>
+                <li>Big Blind: #PLAYERX - #BIGBLIND</li>
+                <li>Small Blind: #PLAYERX - #SMALLBLIND</li>
+            </ul>
+            <div class="chat">
+                <div id="chat-area"></div>
+            
+                 <form id="send-message-form">
+                     <p>Your message: </p>
+                     <textarea id="send-message-box">
+                     </textarea>
+                 </form>
+            </div>
+        </div>
+        
+        <div class="btn btn-group">
+            <button>Call/Check</button>
+            <button>Raise</button>
+            <button>Fold</button>
+            <button>Give up and chicken out!</button>
+        </div>
 	</div>
-		<h2>Lobby: "@lobby"</h2>
-		 
-        <div class="chat">
-        <div id="chat-area"></div>
-    
-         <form id="send-message-form">
-             <p>Your message: </p>
-             <textarea id="send-message-box" maxlength = '100' >
-             </textarea>
-         </form>
-    </div>
-    
-    <div id="player-list" class="checkbox">
-    </div>
 }

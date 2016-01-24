@@ -146,14 +146,6 @@ public class Application extends Controller {
         return ok(pokerAbout.render());
     }
     
-    @SecuredAction
-    public Result pokerPlay() {
-        if(logger.isDebugEnabled()){
-            logger.debug("access granted to pokerAbout");
-        }
-        return ok(pokerPlay.render());
-    }
-    
     
     /*@SecuredAction
     public Result testmethode() {
