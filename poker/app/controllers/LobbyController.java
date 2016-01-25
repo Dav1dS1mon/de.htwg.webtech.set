@@ -108,7 +108,7 @@ public class LobbyController extends Controller {
 			}
 		}
 		
-		return ok(pokerLobby.render(player, SecureSocial.env(), lobbyName));
+		return ok(pokerGame.render(player, SecureSocial.env(), lobbyName));
 	}
 
     @SecuredAction
