@@ -49,9 +49,13 @@ public class LobbyController extends Controller {
 	
 	@SecuredAction
 	public Result getLobbys() {
-		List<String> lobbyList = new ArrayList<String>(lobbys.keySet());
-		String lobbyString = new Gson().toJson(lobbyList);
-		
+		String lobbyString;
+		synchronized (lobbys) {
+			List<String> lobbyList = new ArrayList<String>(lobbys.keySet());
+			lobbyString = new Gson().toJson(lobbyList);
+			
+			
+		}
 		return ok(lobbyString);
 	}
 	
