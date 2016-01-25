@@ -25,7 +25,7 @@ public class Response {
 	public void setLobbyPlayerList(Map<User, Boolean> players) {
 		Map<String, Boolean> readyList = new HashMap<String, Boolean>();
 		for (Entry<User, Boolean> entry : players.entrySet()) {
-			readyList.put(entry.getKey().getName(), entry.getValue());
+			readyList.put(entry.getKey().toString(), entry.getValue());
 		}
 		data.put("value", readyList);
 	}

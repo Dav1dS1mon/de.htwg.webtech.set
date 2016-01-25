@@ -121,7 +121,7 @@ public class Lobby extends Controller {
     	
     	if (req.command.equals("chat")) {
     		res.setCommand("updateChat");
-    		res.setChat(player.getName() + ": " + req.value);
+    		res.setChat(player.toString() + ": " + req.value);
     		updateAll(res);
     	} else if (req.command.equals("playField") && controller.getStatus() == GameStatus.RUNNING) {
     		updatePlayField(res, player);
@@ -137,27 +137,30 @@ public class Lobby extends Controller {
     		
     	} else if (req.command.equals("raise")) {
 			int raiseValue = Integer.valueOf(req.value);
-			if (raiseValue >= 0 && controller.getCurrentPlayer().getPlayerName().equals(player.getName())
-					&& controller.getStatus() == GameStatus.RUNNING) {
+			if (raiseValue >= 0 && isCurrentPlayer(player) && controller.getStatus() == GameStatus.RUNNING) {
 				controller.raise(raiseValue);
 				playFieldChanged();
 			}
 			
 		} else if (req.command.equals("call") || req.command.equals("check")) {
-			boolean a = (controller.getCurrentPlayer().getPlayerName().equals(player.getName()));
+			boolean a = (isCurrentPlayer(player));
 			boolean b = (controller.getStatus() == GameStatus.RUNNING);
 			logger.debug("[Lobby:playerResponse] call, player: " + player.getName() + " | " + a + " | " + b);
-			if (controller.getCurrentPlayer().getPlayerName().equals(player.getName()) && controller.getStatus() == GameStatus.RUNNING) {
+			if (isCurrentPlayer(player) && controller.getStatus() == GameStatus.RUNNING) {
 				logger.debug("[Lobby:playerResponse] call, player: " + player.getName());
 				controller.call();
 				playFieldChanged();
 			}
 		} else if (req.command.equals("fold")) {
-			if (controller.getCurrentPlayer().getPlayerName().equals(player.getName()) && controller.getStatus() == GameStatus.RUNNING) {
+			if (isCurrentPlayer(player) && controller.getStatus() == GameStatus.RUNNING) {
 				controller.fold();
 				playFieldChanged();
 			}
 		}
+    }
+    
+    private boolean isCurrentPlayer(User player) {
+    	return controller.getCurrentPlayer().getPlayerName().equals(player.toString());
     }
 
 	private void checkForGameStart() {
@@ -170,7 +173,7 @@ public class Lobby extends Controller {
 		
 		if(ready && controller.getStatus() == GameStatus.INITIALIZATION && players.size() >= 2) {
 			for (Entry<User, Boolean> entry : players.entrySet()) {
-				controller.addPlayer(entry.getKey().getName());
+				controller.addPlayer(entry.getKey().toString());
 			}
 			controller.startGame();
 			playFieldChanged();
@@ -238,4 +241,23 @@ public class Lobby extends Controller {
 			}
 		};
 	}  
+	
+//	public Map<String, String> getPlayerNameIdPair() {
+//		Map<String, String> nameIdPair = new HashMap<String, String>();
+//		
+//		for (Entry<User, Boolean> entry : players.entrySet()) {
+//			nameIdPair.put(entry.getKey().getId(), entry.getKey().getName());
+//		}
+//		
+//		return nameIdPair;
+//	}
+//	
+//	public String getPlayerNameForId (String id) {
+//		for (Entry<User, Boolean> entry : players.entrySet()) {
+//			if (entry.getKey().getId().equals(id)) {
+//				return entry.getKey().getName();
+//			}
+//		}
+//		return "";
+//	}
 }

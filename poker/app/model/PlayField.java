@@ -38,7 +38,7 @@ public class PlayField {
 			List<Card> holeCards = new LinkedList<Card>();
 			for (Card c : p.getHoleCards()) {
 				Logger.debug(p.getPlayerName() + " == " + player.getName());
-				if (p.getPlayerName().equals(player.getName())) {
+				if (p.getPlayerName().equals(player.toString())) {
 					holeCards.add(c);
 				}				
 			}
@@ -64,7 +64,7 @@ public class PlayField {
 			winner = "";
 		}
 		
-		if (player.getName().equals(controller.getCurrentPlayer().getPlayerName())) {
+		if (player.toString().equals(controller.getCurrentPlayer().getPlayerName())) {
 			yourTurn = true;
 			currentCallValue = controller.getCurrentCallValue();
 		} else {
