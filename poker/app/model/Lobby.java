@@ -178,6 +178,8 @@ public class Lobby extends Controller {
 			} else {
 				// Player can not perform action
 			}
+		} else if (req.command.equals("keepAlive")) {
+			logger.debug("[Lobby:playerResponse] received keepAlive from player: " + player.getName());
 		}
     }
     

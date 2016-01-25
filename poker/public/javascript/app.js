@@ -27,10 +27,17 @@ angular.module('ngPokerApp', [])
 				break;
     	}
 	});
-
+	
+	
+	var keepAliveInterval = setInterval(keepAlive, 30000);
+	
+	function keepAlive() {
+	    var jsonMessage = "{command: keepAlive, value: none}";
+	    Server.send("chat", jsonMessage);
+	    console.log("Json message: ");
+	}
+	
     Server.connect();
-    
-
 	$scope.message = "";
 	$scope.chatArea = [];
 	$scope.players;
