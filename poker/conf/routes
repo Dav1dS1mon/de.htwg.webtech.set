@@ -13,8 +13,8 @@ GET		/socket					@controllers.LobbyController.getSocket
 GET		/poker					@controllers.Application.index
 GET		/help					@controllers.Application.pokerHelp
 GET		/about					@controllers.Application.pokerAbout
-GET		/playGame               @controllers.LobbyController.play(lobbyName: String ?= "")
-GET		/playGame/:lobbyName    @controllers.LobbyController.play(lobbyName: String)
+GET		/lobby               @controllers.LobbyController.play(lobbyName: String ?= "")
+GET		/lobby/:lobbyName    @controllers.LobbyController.play(lobbyName: String)
 
 
 # Map static resources from the /public folder to the /assets URL path
