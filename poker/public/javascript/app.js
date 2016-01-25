@@ -43,6 +43,7 @@ angular.module('ngPokerApp', [])
 	$scope.raiseValue;
 	$scope.currentCallValue;
 	$scope.yourTurn;
+	$scope.currentPlayer;
 	
 	$scope.playField = function() {
 		console.log("$scope.playField - sendUpdatePlayField");
