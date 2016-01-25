@@ -67,12 +67,23 @@ public class LobbyController extends Controller {
 		synchronized (lobbys) {
 			// Check if Player is already in other lobby
 			for (Entry<String, Lobby> entry  : lobbys.entrySet()) {
-				if (entry.getValue().containsPlayer(player)) {
+				if (entry.getValue().containsPlayer(player) && !(entry.getKey().equals(lobbyName))) {
 					entry.getValue().removePlayer(player);
 				}
 			}
 			
 			logger.debug("[LobbyController:play] All lobbys: " + lobbys.toString());
+			// Remove empty lobbys
+			for (Entry<String, Lobby> entry : lobbys.entrySet()) {
+				logger.debug("[LobbyController:play] Lobby: " + entry.getKey() + " count players: " + entry.getValue().getPlayerCount());				
+				if (entry.getValue().getPlayerCount() == 0) {
+					logger.debug("!!!" + lobbys.toString());
+					lobbys.remove(entry.getKey());
+					logger.debug("!!!" + lobbys.toString());
+				}
+			}
+			
+			
 			
 			if (!lobbys.containsKey(lobbyName)) {
 				// Lobby does not exist
@@ -86,8 +97,13 @@ public class LobbyController extends Controller {
 				if (!lobbys.get(lobbyName).containsPlayer(player)) {
 					logger.debug("[LobbyController:play] Lobby '" + lobbyName + "' exists but player is not in lobby.");;
 					
-					logger.debug("[LobbyController:play] Adding player to lobby '" + lobbyName + "'");;
-					lobbys.get(lobbyName).addPlayer(player);
+					if (lobbys.get(lobbyName).gameStarted())
+					{
+						logger.debug("[LobbyController:play] Lobby '" + lobbyName + "' has already started game");;
+					} else {
+						logger.debug("[LobbyController:play] Adding player to lobby '" + lobbyName + "'");;
+						lobbys.get(lobbyName).addPlayer(player);						
+					}
 				}
 			}
 		}
@@ -102,7 +118,6 @@ public class LobbyController extends Controller {
         logger.debug("[LobbyController:getSocket] getSocket called from User: ");
 
         synchronized (lobbys) {
-        	logger.debug("[LobbyController:getSocket] Checking all lobbys: " + lobbys.keySet().toString());
         	for (String lobbyName : lobbys.keySet()) {
         		if (lobbys.get(lobbyName).containsPlayer(player)) {
         			logger.debug("[LobbyController:getSocket] ...player found! Returning WebSocket for this player");

@@ -58,13 +58,13 @@ public class PlayField {
 		
 		currentPlayer = controller.getCurrentPlayer().getPlayerName();
 		dealer = controller.getDealer().getPlayerName();
-		if (controller.getWinningPlayer() != null) {
+		if (controller.getStatus() == GameStatus.ENDED) {
 			winner = controller.getWinningPlayer().getPlayerName();
 		} else {
 			winner = "";
 		}
 		
-		if (player.toString().equals(controller.getCurrentPlayer().getPlayerName())) {
+		if (player.toString().equals(controller.getCurrentPlayer().getPlayerName()) && controller.getStatus() == GameStatus.RUNNING) {
 			yourTurn = true;
 			currentCallValue = controller.getCurrentCallValue();
 		} else {

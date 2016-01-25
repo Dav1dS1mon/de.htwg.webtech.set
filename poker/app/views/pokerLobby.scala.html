@@ -16,9 +16,13 @@
                 <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="(key, value) in players">
                     <p class="btn btn-primary btn-block round playercolor text-center" ng-class="key === currentPlayer ? 'redbtn' : 'bluebtn'">{{key}}</p>
                     <p class="text-center stack">{{value.credits}}</p>
-                    <div ng-repeat="(cardKey, cardValue) in value.cards" class="holeCards">
+                    <!-- <div ng-repeat="(cardKey, cardValue) in value.cards" class="holeCards">
                         <div class="playercard"><img src="assets/images/Cards/{{cardValue.rank}}_{{cardValue.suit}}.png"/></div>
-                    </div>
+                    </div> -->
+                    
+                    <div ng-repeat="n in [0, 1]" class="holeCards">
+                    	<div class="playercard"><img ng-if="activePlayers.indexOf(key) !== -1" ng-src="{{value.cards.length === 2 ? 'assets/images/Cards/' + value.cards[n].rank + '_' + value.cards[n].suit + '.png' : 'assets/images/Cards/POKER.png'}}"/></div>
+                </div>
                 </div>
             </div>
             

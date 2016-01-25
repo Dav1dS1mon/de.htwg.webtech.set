@@ -33,10 +33,10 @@ public class Lobby extends Controller {
 	private final String lobbyName;
 	//private List<User> players = new LinkedList<User>();
 	private Map<User, Boolean> players = new HashMap<User, Boolean>();
-	private List<User> readyPlayers = new LinkedList<User>();
 	private List<User> offlinePlayers = new LinkedList<User>();
 	private Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
 	private Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
+	private boolean gameStarted = false;
 	
 	public Lobby(String lobbyName) {
 		logger.debug("[Lobby:Lobby] Create new Lobby with name '" + lobbyName + "'");
@@ -99,7 +99,13 @@ public class Lobby extends Controller {
 	    	
 	    	offlinePlayers.remove(player);
 	    	players.remove(player);
+	    	
+	    	if (controller.getStatus() == GameStatus.RUNNING) {
+    			controller.removePlayer(player.toString());
+	    	}
+	    	
 	    	updateLobby();
+	    	playFieldChanged();
     	}
     }
     
@@ -123,40 +129,55 @@ public class Lobby extends Controller {
     		res.setCommand("updateChat");
     		res.setChat(player.toString() + ": " + req.value);
     		updateAll(res);
-    	} else if (req.command.equals("playField") && controller.getStatus() == GameStatus.RUNNING) {
+    	} else if (req.command.equals("playField") && gameIsRunning()) {
     		updatePlayField(res, player);
     		
-    	} else if (req.command.equals("ready")) {
+    	} else if (req.command.equals("ready") && gameIsInitializing()) {
     		if (req.value.equals("true")) {
     			players.put(player, true);
     		} else if (req.value.equals("false")) {
     			players.put(player, false);
     		}
-    		updateLobby();
-    		checkForGameStart();
+    		if (gameIsInitializing()) {
+    			updateLobby();
+    			checkForGameStart();
+    		}
     		
     	} else if (req.command.equals("raise")) {
 			int raiseValue = Integer.valueOf(req.value);
-			if (raiseValue >= 0 && isCurrentPlayer(player) && controller.getStatus() == GameStatus.RUNNING) {
+			if (raiseValue >= 0 && isCurrentPlayer(player) && gameIsRunning()) {
 				controller.raise(raiseValue);
 				playFieldChanged();
+			} else {
+				// Player can not perform action
 			}
 			
 		} else if (req.command.equals("call") || req.command.equals("check")) {
 			boolean a = (isCurrentPlayer(player));
-			boolean b = (controller.getStatus() == GameStatus.RUNNING);
-			logger.debug("[Lobby:playerResponse] call, player: " + player.getName() + " | " + a + " | " + b);
-			if (isCurrentPlayer(player) && controller.getStatus() == GameStatus.RUNNING) {
+			logger.debug("[Lobby:playerResponse] call, player: " + player.getName() + " | " + a);
+			if (isCurrentPlayer(player) && gameIsRunning()) {
 				logger.debug("[Lobby:playerResponse] call, player: " + player.getName());
 				controller.call();
 				playFieldChanged();
+			} else {
+				// Player can not perform action
 			}
 		} else if (req.command.equals("fold")) {
-			if (isCurrentPlayer(player) && controller.getStatus() == GameStatus.RUNNING) {
+			if (isCurrentPlayer(player) && gameIsRunning()) {
 				controller.fold();
 				playFieldChanged();
+			} else {
+				// Player can not perform action
 			}
 		}
+    }
+    
+    private boolean gameIsInitializing() {
+    	return controller.getStatus() == GameStatus.INITIALIZATION;
+    }
+    
+    private boolean gameIsRunning() {
+    	return controller.getStatus() == GameStatus.RUNNING;
     }
     
     private boolean isCurrentPlayer(User player) {
@@ -176,6 +197,7 @@ public class Lobby extends Controller {
 				controller.addPlayer(entry.getKey().toString());
 			}
 			controller.startGame();
+			gameStarted = true;
 			playFieldChanged();
 		}
 	}
@@ -238,8 +260,22 @@ public class Lobby extends Controller {
 				logger.debug("[Lobby:getSocketForPlayer] onReady called with player '" + player.getName());
 				initWebSocket(player, in, out);
 	    		updateLobby();
+	    		if (gameStarted) {
+	    			Response res = new Response();
+	    			res.setCommand("playFieldChanged");
+	    			
+	    			update(res, player);
+	    		}
 			}
 		};
+	}
+
+	public int getPlayerCount() {
+		return players.size();
+	}
+
+	public boolean gameStarted() {
+		return this.gameStarted;
 	}  
 	
 //	public Map<String, String> getPlayerNameIdPair() {
