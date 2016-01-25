@@ -1,5 +1,11 @@
 package model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -113,7 +119,7 @@ public class Lobby extends Controller {
 		return players.containsKey(player);
 	}
     
-    public void playerRequest(User player, String request) {
+    public void playerRequest(User player, String request) throws ParseException {
 		logger.debug("[Lobby:playerResponse] Called with: " + request.getClass().toString() + " text: " + request.toString());
 		Request req = new Gson().fromJson(request, Request.class);
 		if (!req.value.equals(""))
@@ -126,8 +132,11 @@ public class Lobby extends Controller {
     	Response res = new Response();
     	
     	if (req.command.equals("chat")) {
+    		LocalTime localTime = LocalTime.now();
+    		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
+    		
     		res.setCommand("updateChat");
-    		res.setChat(player.toString() + ": " + req.value);
+    		res.setChat("" + timeStamp + " " + player.toString() + ": " + req.value);
     		updateAll(res);
     	} else if (req.command.equals("playField") && gameIsRunning()) {
     		updatePlayField(res, player);

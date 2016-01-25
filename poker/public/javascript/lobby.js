@@ -19,6 +19,6 @@ ngLobbyApp.controller('LobbyController', function ($scope, $http, $location) {
 	}
 
 	$scope.getLobbies();
-	setInterval($scope.getLobbies, 2000);
+	setInterval($scope.getLobbies, 4000);
 	console.log("Loaded controller");
 });
