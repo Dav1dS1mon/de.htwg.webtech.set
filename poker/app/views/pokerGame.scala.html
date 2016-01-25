@@ -9,20 +9,19 @@
 	<script src="/assets/javascript/websocket.js"></script>
 	<script src="/assets/javascript/app.js"></script>
 	
-	<h2>Lobby: "@lobby"</h2>
 	<div ng-app="ngPokerApp" ng-controller="PokerController" class="playfield">
-	    <div class="col-md-8">
+	    <div class="col-md-8" style="border-style: solid; min-height:500px;">
             <div class="row">
                 <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="(key, value) in players">
                     <p class="btn btn-primary btn-block round playercolor text-center" ng-class="key === currentPlayer ? 'redbtn' : 'bluebtn'">{{key}}</p>
-                    <p class="text-center stack">{{value.credits}}</p>
                     <!-- <div ng-repeat="(cardKey, cardValue) in value.cards" class="holeCards">
                         <div class="playercard"><img src="/images/Cards/{{cardValue.rank}}_{{cardValue.suit}}.png"/></div>
                     </div> -->
                     
                     <div ng-repeat="n in [0, 1]" class="holeCards">
                     	<div class="playercard"><img ng-if="activePlayers.indexOf(key) !== -1" ng-src="{{value.cards.length === 2 ? '/assets/images/Cards/' + value.cards[n].rank + '_' + value.cards[n].suit + '.png' : '/assets/images/Cards/POKER.png'}}"/></div>
-                </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">{{value.credits}}</div>
                 </div>
             </div>
             
@@ -45,6 +44,7 @@
         <div class="col-md-4 gameInfo"> 
             <h3 class="glyphicon glyphicon-info-sign">GAME INFORMATION</h3>
             <ul>
+                <li>Lobby: @lobby</li>
                 <li>Leader: #PLAYERX - #CASH</li>
                 <li>Big Blind: #PLAYERX - {{bigBlind}}</li>
                 <li>Small Blind: #PLAYERX - {{smallBlind}}</li>
@@ -52,7 +52,7 @@
             
             
             <div>
-                <div height="400px" width="400px">
+                <div id="chat-area">
                 	<p ng-repeat="text in chatArea">{{text}}<br/><p>
                 </div>
             
@@ -60,23 +60,19 @@
                      <p>Your message: </p>
                      <input ng-model="message">
                      <button ng-click="sendMessage()">Send</button>
-                     <button ng-click="playField()">Update Play Field</button>
                  </form>
             </div>
             
         <div id="player-list" ng-repeat="(key, value) in lobbyPlayer">            		
             	<p ng-style="{color: value ? 'green' : 'red' }">{{key}}</p>
             </div>
-        </div>
-        <input type="checkbox" ng-model="readyState" ng-change="ready()"/><label>Ich bin bereit zum Spielen</label>
-        
-        
-        
-        <div class="btn btn-group" ng-style="{visibility: yourTurn ? 'visible' : 'hidden'}">
-            <button ng-click="call()">{{currentCallValue > 0 ? 'Call ' + currentCallValue + ' Cr.' : 'Check'}}</button>
-            <input ng-model="raiseValue">
-            <button ng-click="raise()">Raise</button>
-            <button ng-click="fold()">Fold</button>
+            <input type="checkbox" ng-model="readyState" ng-change="ready()"/><label>Ich bin bereit zum Spielen</label>
+            <div class="btn btn-group" ng-style="{visibility: yourTurn ? 'visible' : 'hidden'}">
+                <button ng-click="call()">{{currentCallValue > 0 ? 'Call ' + currentCallValue + ' Cr.' : 'Check'}}</button>
+                <input ng-model="raiseValue">
+                <button ng-click="raise()">Raise</button>
+                <button ng-click="fold()">Fold</button>
+            </div>
         </div>
 	</div>
 }

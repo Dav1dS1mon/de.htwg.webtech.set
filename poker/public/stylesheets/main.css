@@ -29,7 +29,7 @@ hr {
 }
 
 .playercard img {
-    width:50%;
+    width:25%;
     float:left;
 }
 
@@ -40,7 +40,7 @@ div.communityCard {
 
 .communityCard img {
 	max-width: 100%;
-	max-height: 100%
+	max-height: 100%;
 	float: left;
 }
 
@@ -53,33 +53,6 @@ div.communityCard {
 
 .playercolor {
     color:#FFFFFF;
-}
-
-.bluebtn {
-    background-color:BLUE;
-}
-.greenbtn {
-    background-color:GREEN;
-}
-
-.yellowbtn {
-    background-color:YELLOW;
-}
-.redbtn {
-    background-color:RED;
-}
-.orangebtn {
-    background-color:ORANGE;
-}
-.purplebtn {
-    background-color:PURPLE;
-}
-.blackbtn {
-    background-color:BLACK;
-}
-
-.greybtn {
-    background-color:DARKSLATEGRAY;
 }
 
 /* sidebar */
@@ -104,6 +77,7 @@ div.communityCard {
     padding: 5px;
     width: 100%;
     height: 200px;
+    max-height: 200px;
     overflow-y: scroll;
     overflow-x: hidden;
     border-radius: 10px;
