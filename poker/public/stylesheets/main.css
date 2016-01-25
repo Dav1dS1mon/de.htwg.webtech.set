@@ -21,10 +21,20 @@ hr {
     margin-top:20px;
 }
 
+.field {
+    min-height:500px;
+}
+
+.border {
+    border-style:solid;
+}
+
 .btn-primary {
     border-color:#000000;
 }
 .round {
+    margin-top:5px;
+    margin-bottom:5px;
     border-radius:24px;
 }
 

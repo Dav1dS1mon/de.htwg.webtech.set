@@ -10,7 +10,7 @@
 	<script src="/assets/javascript/app.js"></script>
 	
 	<div ng-app="ngPokerApp" ng-controller="PokerController" class="playfield">
-	    <div class="col-md-8" style="border-style: solid; min-height:500px;">
+	    <div class="col-md-8 field border">
             <div class="row">
                 <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="(key, value) in players">
                     <p class="btn btn-primary btn-block round playercolor text-center" ng-class="key === currentPlayer ? 'redbtn' : 'bluebtn'">{{key}}</p>
@@ -49,7 +49,6 @@
                 <li>Big Blind: #PLAYERX - {{bigBlind}}</li>
                 <li>Small Blind: #PLAYERX - {{smallBlind}}</li>
             </ul>
-            
             
             <div>
                 <div id="chat-area">
