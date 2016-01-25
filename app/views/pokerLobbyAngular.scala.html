@@ -1,0 +1,26 @@
+@(user: service.User, env: securesocial.core.RuntimeEnvironment)
+@import securesocial.core.IdentityProvider
+@import securesocial.core.AuthenticationMethod._
+@import Http.Context.Implicit
+
+@main("Poker - Texas Holdem") {
+	
+	<link rel="stylesheet" href="stylesheets/main.css"/>
+	<script src="javascript/websocket.js"></script>
+	<script src="javascript/lobby.js"></script>
+	
+	<h2>Lobby Browser</h2>
+	
+	<div ng-app="lobbyModule" ng-controller="LobbyController" class="lobby">
+	<input ng-model="newLobbyName"><button ng-click="enterNewLobby()" >Create new Lobby</button>
+		<h3>Available Lobbies:</h3>
+		<div ng-if="hasLobbies">
+            <div id="gameList" class="row">
+                <div class="btn-group-vertical col-xs-offset-1 col-xs-4" role="group">
+                    <a href="/lobby/{{lobby}}" class="list-group-item" ng-repeat="lobby in lobbies">{{lobby}}</a>
+                </div>
+            </div>
+        </div>
+        
+	</div>
+}
