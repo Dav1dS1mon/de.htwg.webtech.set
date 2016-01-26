@@ -1,0 +1,77 @@
+@(user: service.User, env: securesocial.core.RuntimeEnvironment, lobby: String)
+@import securesocial.core.IdentityProvider
+@import securesocial.core.AuthenticationMethod._
+@import Http.Context.Implicit
+
+@main("Poker - Texas Holdem") {
+	
+	<link rel="stylesheet" href="/stylesheets/main.css"/>
+	<script src="/assets/javascript/websocket.js"></script>
+	<script src="/assets/javascript/app.js"></script>
+	
+	<div ng-app="ngPokerApp" ng-controller="PokerController" class="playfield">
+	    <div class="col-md-8 field border">
+            <div class="row">
+                <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="(key, value) in players">
+                    <p class="btn btn-primary btn-block round playercolor text-center" ng-class="key === currentPlayer ? 'redbtn' : 'bluebtn'">{{key}}</p>
+                    <!-- <div ng-repeat="(cardKey, cardValue) in value.cards" class="holeCards">
+                        <div class="playercard"><img src="/images/Cards/{{cardValue.rank}}_{{cardValue.suit}}.png"/></div>
+                    </div> -->
+                    
+                    <div ng-repeat="n in [0, 1]" class="holeCards">
+                    	<div class="playercard"><img ng-if="activePlayers.indexOf(key) !== -1" ng-src="{{value.cards.length === 2 ? '/assets/images/Cards/' + value.cards[n].rank + '_' + value.cards[n].suit + '.png' : '/assets/images/Cards/POKER.png'}}"/></div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">{{value.credits}}</div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div id="communityCards" class="col-md-8">
+                    <div class="">
+                        <div class="communityCard" ng-repeat="(key, value) in communityCards">
+                        <img src="/assets/images/Cards/{{value.rank}}_{{value.suit}}.png"/>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-10 col-md-offset-1">
+                        <p>Pot: {{pot}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 gameInfo"> 
+            <h3 class="glyphicon glyphicon-info-sign">GAME INFORMATION</h3>
+            <ul>
+                <li>Lobby: @lobby</li>
+                <li>Leader: #PLAYERX - #CASH</li>
+                <li>Big Blind: #PLAYERX - {{bigBlind}}</li>
+                <li>Small Blind: #PLAYERX - {{smallBlind}}</li>
+            </ul>
+            
+            <div>
+                <div id="chat-area">
+                	<p ng-repeat="text in chatArea">{{text}}<br/><p>
+                </div>
+            
+                 <form id="send-message-form">
+                     <p>Your message: </p>
+                     <input ng-model="message">
+                     <button ng-click="sendMessage()">Send</button>
+                 </form>
+            </div>
+            
+        <div id="player-list" ng-repeat="(key, value) in lobbyPlayer">            		
+            	<p ng-style="{color: value ? 'green' : 'red' }">{{key}}</p>
+            </div>
+            <input type="checkbox" ng-model="readyState" ng-change="ready()"/><label>Ich bin bereit zum Spielen</label>
+            <div class="btn btn-group" ng-style="{visibility: yourTurn ? 'visible' : 'hidden'}">
+                <button ng-click="call()">{{currentCallValue > 0 ? 'Call ' + currentCallValue + ' Cr.' : 'Check'}}</button>
+                <input ng-model="raiseValue">
+                <button ng-click="raise()">Raise</button>
+                <button ng-click="fold()">Fold</button>
+            </div>
+        </div>
+	</div>
+}

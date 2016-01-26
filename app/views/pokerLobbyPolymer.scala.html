@@ -1,0 +1,17 @@
+@(user: service.User, env: securesocial.core.RuntimeEnvironment)
+@import securesocial.core.IdentityProvider
+@import securesocial.core.AuthenticationMethod._
+@import Http.Context.Implicit
+
+@main("Poker - Texas Holdem") {
+	
+	<link rel="stylesheet" href="stylesheets/main.css"/>
+	<script src="javascript/websocket.js"></script>
+	<script src="javascript/lobby.js"></script>
+	<link rel="import" href="elements/lobby.html"/>
+	
+	<h2>Lobby Browser</h2>
+	
+	<lobby></lobby>
+
+}

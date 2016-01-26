@@ -17,6 +17,10 @@
 package controllers;
 
 import com.google.inject.Inject;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.nio.file.Paths;
 
 import de.htwg.se.texasholdem.controller.imp.PokerControllerImp;
 import de.htwg.se.texasholdem.controller.PokerController;
@@ -106,6 +110,12 @@ public class Application extends Controller {
         User current = (User) ctx().args.get(SecureSocial.USER_KEY);
         return ok(pokerLobbyAngular.render(current, SecureSocial.env()));
     }
+    
+    @SecuredAction
+    public Result pokerPolymer() {
+        User current =(User) ctx().args.get(SecureSocial.USER_KEY);
+        return ok(pokerLobbyPolymer.render(current, SecureSocial.env()));
+    }
 
     /**
      * Sample use of SecureSocial.currentUser. Access the /current-user to test it
@@ -141,6 +151,23 @@ public class Application extends Controller {
             logger.debug("access granted to pokerAbout");
         }
         return ok(pokerAbout.render());
+    }
+    
+    public Result fileLoad(String rootPath, String file) {
+    	String cont = "";
+    	try {
+	    	File reqFile = new File(rootPath, file);
+	    	//Make sure result path is still in root path
+	    	if (!Paths.get(reqFile.getAbsolutePath()).startsWith(Paths.get(new File(rootPath).getAbsolutePath())))
+	    		return notFound("404 - Not Found");
+	    	BufferedReader br = new BufferedReader(new FileReader(reqFile));
+	    	String line = "";
+	    	while ((line = br.readLine()) != null)
+	    			cont += line + "\n";
+    	} catch (Exception e) {
+    		return notFound("404 - Not Found");
+    	}
+    	return ok(cont);
     }
     
     @SecuredAction(authorization = WithProvider.class, params = {"github"})
