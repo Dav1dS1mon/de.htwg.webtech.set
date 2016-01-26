@@ -143,15 +143,10 @@ public class Application extends Controller {
         return ok(pokerAbout.render());
     }
     
-    
-    /*@SecuredAction
-    public Result testmethode() {
-        if(logger.isDebugEnabled()){
-            logger.debug("access granted to index");
-        }
-        DemoUser user = (DemoUser) ctx().args.get(SecureSocial.USER_KEY);
-        return ok(test.render());
-    }*/
+    @SecuredAction(authorization = WithProvider.class, params = {"github"})
+    public Result onlyGithub() {
+        return ok("You are seeing this, because you are logged in using GitHub account.");
+    }
 
     
     

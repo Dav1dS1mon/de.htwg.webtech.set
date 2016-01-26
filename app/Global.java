@@ -19,6 +19,9 @@ import play.GlobalSettings;
 import securesocial.core.RuntimeEnvironment;
 import service.MyEnvironment;
 
+import play.api.mvc.EssentialFilter;
+import play.filters.csrf.CSRFFilter;
+
 public class Global extends GlobalSettings {
     private RuntimeEnvironment env = new MyEnvironment();
 
@@ -34,4 +37,10 @@ public class Global extends GlobalSettings {
         }
         return result;
     }*/
+
+    @Override
+    public <T extends EssentialFilter> Class<T>[] filters() {
+        return new Class[]{CSRFFilter.class};
+    }
+    
 }
