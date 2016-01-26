@@ -32,6 +32,15 @@ hr {
 .btn-primary {
     border-color:#000000;
 }
+
+.redbtn {
+	background-color:#FF0000;
+}
+
+.bluebtn {
+	background-color:#0000FF;
+	}
+
 .round {
     margin-top:5px;
     margin-bottom:5px;

@@ -21,6 +21,7 @@ import com.google.inject.Inject;
 import de.htwg.se.texasholdem.controller.GameStatus;
 import de.htwg.se.texasholdem.controller.PokerController;
 import de.htwg.se.texasholdem.controller.imp.PokerControllerImp;
+import de.htwg.se.texasholdem.util.observer.IObserver;
 import play.Logger;
 import play.libs.F;
 import play.libs.F.Callback;
@@ -32,7 +33,7 @@ import play.mvc.WebSocket.Out;
 import securesocial.core.RuntimeEnvironment;
 import service.User;
 
-public class Lobby extends Controller {
+public class Lobby extends Controller implements IObserver {
 	public static Logger.ALogger logger = Logger.of("application.controllers.Lobby");
 	
 	private final PokerController controller;
@@ -48,6 +49,7 @@ public class Lobby extends Controller {
 		logger.debug("[Lobby:Lobby] Create new Lobby with name '" + lobbyName + "'");
 		this.controller = new PokerControllerImp();
 		this.lobbyName = lobbyName;
+		controller.addObserver(this);
 	}
     
     private void initWebSocket(final User player, WebSocket.In<String> in, WebSocket.Out<String> out) {
@@ -156,7 +158,7 @@ public class Lobby extends Controller {
 			int raiseValue = Integer.valueOf(req.value);
 			if (raiseValue >= 0 && isCurrentPlayer(player) && gameIsRunning()) {
 				controller.raise(raiseValue);
-				playFieldChanged();
+				//playFieldChanged();
 			} else {
 				// Player can not perform action
 			}
@@ -167,14 +169,14 @@ public class Lobby extends Controller {
 			if (isCurrentPlayer(player) && gameIsRunning()) {
 				logger.debug("[Lobby:playerResponse] call, player: " + player.getName());
 				controller.call();
-				playFieldChanged();
+				//playFieldChanged();
 			} else {
 				// Player can not perform action
 			}
 		} else if (req.command.equals("fold")) {
 			if (isCurrentPlayer(player) && gameIsRunning()) {
 				controller.fold();
-				playFieldChanged();
+				//playFieldChanged();
 			} else {
 				// Player can not perform action
 			}
@@ -209,7 +211,7 @@ public class Lobby extends Controller {
 			}
 			controller.startGame();
 			gameStarted = true;
-			playFieldChanged();
+			//playFieldChanged();
 		}
 	}
 
@@ -287,6 +289,11 @@ public class Lobby extends Controller {
 
 	public boolean gameStarted() {
 		return this.gameStarted;
+	}
+
+	@Override
+	public void update() {
+		playFieldChanged();
 	}  
 	
 //	public Map<String, String> getPlayerNameIdPair() {
