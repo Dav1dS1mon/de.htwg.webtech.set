@@ -51,10 +51,9 @@ public class LobbyController extends Controller {
 	public Result getLobbys() {
 		String lobbyString;
 		synchronized (lobbys) {
+			removeEmptyLobbys();
 			List<String> lobbyList = new ArrayList<String>(lobbys.keySet());
 			lobbyString = new Gson().toJson(lobbyList);
-			
-			
 		}
 		return ok(lobbyString);
 	}
@@ -78,14 +77,7 @@ public class LobbyController extends Controller {
 			
 			logger.debug("[LobbyController:play] All lobbys: " + lobbys.toString());
 			// Remove empty lobbys
-			for (Entry<String, Lobby> entry : lobbys.entrySet()) {
-				logger.debug("[LobbyController:play] Lobby: " + entry.getKey() + " count players: " + entry.getValue().getPlayerCount());				
-				if (entry.getValue().getPlayerCount() == 0) {
-					logger.debug("!!!" + lobbys.toString());
-					lobbys.remove(entry.getKey());
-					logger.debug("!!!" + lobbys.toString());
-				}
-			}
+			removeEmptyLobbys();
 			
 			
 			
@@ -113,6 +105,15 @@ public class LobbyController extends Controller {
 		}
 		
 		return ok(pokerGame.render(player, SecureSocial.env(), lobbyName));
+	}
+
+	private void removeEmptyLobbys() {
+		for (Entry<String, Lobby> entry : lobbys.entrySet()) {
+			logger.debug("[LobbyController:play] Lobby: " + entry.getKey() + " count players: " + entry.getValue().getPlayerCount());				
+			if (entry.getValue().getPlayerCount() == 0) {
+				lobbys.remove(entry.getKey());
+			}
+		}
 	}
 
     @SecuredAction

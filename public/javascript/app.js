@@ -49,8 +49,16 @@ angular.module('ngPokerApp', [])
 	$scope.lobbyPlayer;
 	$scope.raiseValue;
 	$scope.currentCallValue;
+	
+	// To check if buttons (raise, call, ...) have to be visible for you.
+	// If game ended, yourTurn will be 'false', so that the controls can be hidden from the user
+	// also if ONE ROUND has be ended.
 	$scope.yourTurn;
+	
+	// Will always be a player. Also if game ends.
+	// Don't use it to hide something if game has ended.
 	$scope.currentPlayer;
+	
 	$scope.activePlayers = [];
 	$scope.smallBlindPlayer;
 	$scope.bigBlindPlayer;
@@ -59,6 +67,7 @@ angular.module('ngPokerApp', [])
 	$scope.roundFinished;
 	$scope.lastEvent;
 	$scope.beforeLastEvent = "";
+	$scope.showOnce = false;
 	
 	$scope.playField = function() {
 		console.log("$scope.playField - sendUpdatePlayField");
@@ -189,6 +198,12 @@ angular.module('ngPokerApp', [])
 		}
 
 		$scope.$apply();
+		
+		if (($scope.winner != "" || $scope.winner.length > 0) && !$scope.showOnce) {
+			$scope.showOnce = true;
+			alert($scope.winner + " won the game! \nThanks for playing!\n\nYou will be redirected to the Lobby Browser by clicking on 'OK'");
+			window.location.replace('http://' + location.host + '/pokerAngular');
+		}
 	};
 }]);
 

@@ -218,7 +218,7 @@ public class Lobby extends Controller implements IObserver {
     		res.setCommand("updateChat");
     		res.setChat("[" + timeStamp + "] " + player.toString() + ": " + req.value);
     		updateAll(res);
-    	} else if (req.command.equals("playField") && gameIsRunning()) {
+    	} else if (req.command.equals("playField") && (gameIsRunning() || controller.getStatus() == GameStatus.ENDED)) {
     		updatePlayField(res, player);
     		
     	} else if (req.command.equals("ready") && gameIsInitializing()) {

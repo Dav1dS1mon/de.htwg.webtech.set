@@ -14,8 +14,13 @@ ngLobbyApp.controller('LobbyController', function ($scope, $http, $location) {
 	$scope.newLobbyName = "";
 	
 	$scope.enterNewLobby = function() {
-		console.log("changed site to: " + location.host + '/lobby/' + $scope.newLobbyName);
-		window.location.replace('http://' + location.host + '/lobby/' + $scope.newLobbyName);
+		if($scope.newLobbyName == "" || $scope.newLobbyName.length == 0) {
+			console.log("changed site to: " + location.host + '/lobby');
+			window.location.replace('http://' + location.host + '/lobby');
+		} else {
+			console.log("changed site to: " + location.host + '/lobby/' + $scope.newLobbyName);
+			window.location.replace('http://' + location.host + '/lobby/' + $scope.newLobbyName);
+		}
 	}
 
 	$scope.getLobbies();

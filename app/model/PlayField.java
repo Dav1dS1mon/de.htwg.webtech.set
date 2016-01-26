@@ -103,6 +103,5 @@ public class PlayField {
 		}
 
 		Logger.info("Last Event = " + lastEvent);
-		
 	}
 }
