@@ -1,0 +1,21 @@
+{
+  "name": "public",
+  "homepage": "https://github.com/Hawk30100/de.htwg.webtech.set",
+  "authors": [
+    "Joey <klein.winz@web.de>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#1.2.0"
+  }
+}

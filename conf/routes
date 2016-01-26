@@ -18,6 +18,7 @@ GET		/lobbys					@controllers.LobbyController.getLobbys
 
 # Angular Game
 GET		/pokerAngular			@controllers.Application.pokerAngular
+GET		/pokerPolymer			@controllers.Application.pokerPolymer
 GET		/lobby              	@controllers.LobbyController.play(lobbyName: String ?= "")
 GET		/lobby/:lobbyName    	@controllers.LobbyController.play(lobbyName: String)
 
@@ -29,4 +30,6 @@ GET     /assets/*file         controllers.Assets.versioned(path="/public", file:
 GET		/images/Cards/*file	  controllers.Assets.at(path="/public/images/Cards", file)
 GET     /javascript/*file     controllers.Assets.at(path="/public/javascript", file)
 GET     /stylesheets/*file    controllers.Assets.at(path="/public/stylesheets", file)
+GET     /elements/*file       controllers.Assets.at(path="/public/elements", file)
+GET     /images/*file         controllers.Assets.at(path="/public/images", file)
 ->      /auth                 securesocial.Routes

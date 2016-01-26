@@ -106,6 +106,12 @@ public class Application extends Controller {
         User current = (User) ctx().args.get(SecureSocial.USER_KEY);
         return ok(pokerLobbyAngular.render(current, SecureSocial.env()));
     }
+    
+    @SecuredAction
+    public Result pokerPolymer() {
+        User current = (User) ctx().args.get(SecureSocial.USER_KEY);
+        return ok(pokerLobbyPolymer.render(current, SecureSocial.env()));
+    }
 
     /**
      * Sample use of SecureSocial.currentUser. Access the /current-user to test it

@@ -4,7 +4,8 @@
 @import Http.Context.Implicit
 
 @main("Poker - Texas Holdem") {
-	
+
+	<link rel="import" href='@routes.Assets.at("/public/elements", "lobby.html")'>	
 	<link rel="stylesheet" href="stylesheets/main.css"/>
 	<script src="javascript/websocket.js"></script>
 	<script src="javascript/lobby.js"></script>
@@ -21,5 +22,8 @@
                 </div>
             </div>
         </div>
+        <div class="spin-wrapper">
+	        <my-prespinner></my-prespinner>
+	    </div>
 	</div>
 }
