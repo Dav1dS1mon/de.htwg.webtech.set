@@ -7,6 +7,7 @@ GET     /                    	@controllers.Application.index
 GET     /userAware           	@controllers.Application.userAware
 GET     /link-result         	@controllers.Application.linkResult
 GET     /current-user        	@controllers.Application.currentUser
+GET     /only-github            @controllers.Application.onlyGithub
 GET		/socket					@controllers.LobbyController.getSocket
 
 # Poker Game

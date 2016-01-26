@@ -25,8 +25,8 @@ class MyEnvironment extends RuntimeEnvironment.Default {
   type U = User
 
   override lazy val providers = ListMap(
-    include(new GitHubProvider(routes, cacheService, oauth2ClientFor(GitHubProvider.GitHub))),
-    include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google)))
+    include(new GitHubProvider(routes, cacheService, oauth2ClientFor(GitHubProvider.GitHub)))
+    //include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google)))
   )
 
   override val userService: UserService[U] = new InMemoryUserService()
