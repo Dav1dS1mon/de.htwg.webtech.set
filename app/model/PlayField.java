@@ -28,6 +28,11 @@ public class PlayField {
 	private int bigBlind;
 	private int currentCallValue;
 	private boolean yourTurn;
+	private String smallBlindPlayer;
+	private String bigBlindPlayer;
+	private String chipLeaderName;
+	private int chipLeaderCredits;
+	private boolean roundFinished;
 	
 	public PlayField(PokerController controller, User player) {
 		for (Player p : controller.getPlayerList()) {
@@ -60,6 +65,7 @@ public class PlayField {
 		dealer = controller.getDealer().getPlayerName();
 		if (controller.getStatus() == GameStatus.ENDED) {
 			winner = controller.getWinningPlayer().getPlayerName();
+			Logger.debug("WINNER: " + winner);
 		} else {
 			winner = "";
 		}
@@ -78,5 +84,12 @@ public class PlayField {
 		gameOver = controller.getGameOver();
 		smallBlind = controller.getSmallBlind();
 		bigBlind = controller.getBigBlind();
+		smallBlindPlayer = controller.getSmallBlindPlayer().getPlayerName();
+		bigBlindPlayer = controller.getBigBlindPlayer().getPlayerName();
+		chipLeaderName = controller.getChipLeader().getPlayerName();
+		chipLeaderCredits = controller.getChipLeader().getPlayerMoney();
+		roundFinished = controller.roundFinished();
+		Logger.debug("ROUND FINISHED: " + roundFinished);
+		
 	}
 }

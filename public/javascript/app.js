@@ -52,6 +52,11 @@ angular.module('ngPokerApp', [])
 	$scope.yourTurn;
 	$scope.currentPlayer;
 	$scope.activePlayers = [];
+	$scope.smallBlindPlayer;
+	$scope.bigBlindPlayer;
+	$scope.chipLeaderName;
+	$scope.chipLeaderCredits;
+	$scope.roundFinished;
 	
 	$scope.playField = function() {
 		console.log("$scope.playField - sendUpdatePlayField");
@@ -165,6 +170,13 @@ angular.module('ngPokerApp', [])
 			$scope.activePlayers.push(json.value.activePlayers[a]);
 		}
 		
+		
+		$scope.smallBlindPlayer = json.value.smallBlindPlayer;
+		$scope.bigBlindPlayer = json.value.bigBlindPlayer;
+		$scope.chipLeaderName = json.value.chipLeaderName;
+		$scope.chipLeaderCredits = json.value.chipLeaderCredits;
+		$scope.roundFinished = json.value.roundFinished;
+			
 		$scope.$apply();
 	};
 }]);

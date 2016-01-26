@@ -45,9 +45,9 @@
             <h3 class="glyphicon glyphicon-info-sign">GAME INFORMATION</h3>
             <ul>
                 <li>Lobby: @lobby</li>
-                <li>Leader: #PLAYERX - #CASH</li>
-                <li>Big Blind: #PLAYERX - {{bigBlind}}</li>
-                <li>Small Blind: #PLAYERX - {{smallBlind}}</li>
+                <li>Leader: {{chipLeaderName}} - {{chipLeaderCredits}}</li>
+                <li>Big Blind: {{bigBlindPlayer}}- {{bigBlind}}</li>
+                <li>Small Blind: {{smallBlindPlayer}} - {{smallBlind}}</li>
             </ul>
             
             <div>
@@ -66,7 +66,7 @@
             	<p ng-style="{color: value ? 'green' : 'red' }">{{key}}</p>
             </div>
             <input type="checkbox" ng-model="readyState" ng-change="ready()"/><label>Ich bin bereit zum Spielen</label>
-            <div class="btn btn-group" ng-style="{visibility: yourTurn ? 'visible' : 'hidden'}">
+            <div class="btn btn-group" ng-style="{visibility: yourTurn || roundFinished ? 'visible' : 'hidden'}">
                 <button ng-click="call()">{{currentCallValue > 0 ? 'Call ' + currentCallValue + ' Cr.' : 'Check'}}</button>
                 <input ng-model="raiseValue">
                 <button ng-click="raise()">Raise</button>

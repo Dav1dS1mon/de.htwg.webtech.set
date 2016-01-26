@@ -7,12 +7,18 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import model.Request;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
@@ -44,12 +50,66 @@ public class Lobby extends Controller implements IObserver {
 	private Map<User, WebSocket.In<String>> inputChannels = new HashMap<User, WebSocket.In<String>>();
 	private Map<User, WebSocket.Out<String>> outputChannels = new HashMap<User, WebSocket.Out<String>>();
 	private boolean gameStarted = false;
+
+    private LinkedBlockingQueue<PlayerRequest> queue = new LinkedBlockingQueue<PlayerRequest>();
+	private Future<?> mainExecutor;
+	private Future<?> playFieldExecutor;
+
+	private class PlayerRequest {
+		private User user;
+		private Request request;
+
+		public PlayerRequest(User user, Request request) {
+			this.user = user;
+			this.request = request;
+		}
+	}
+	private final ReentrantLock lock;
 	
 	public Lobby(String lobbyName) {
+		lock = new ReentrantLock();
 		logger.debug("[Lobby:Lobby] Create new Lobby with name '" + lobbyName + "'");
-		this.controller = new PokerControllerImp();
+		this.controller = new PokerControllerImp(lock);
 		this.lobbyName = lobbyName;
 		controller.addObserver(this);
+		
+		mainExecutor = Executors.newSingleThreadExecutor().submit(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					while(true) {
+						// Main worker receiving all requests:
+						lock.lock();
+						PlayerRequest take;
+						take = queue.take();
+						subPlayerRequest(take.user, take.request);
+						lock.unlock();
+					}
+				} catch (InterruptedException e) {
+					// thread was interrupted, probably about to shut down
+				}
+			}
+		});
+		
+		playFieldExecutor = Executors.newSingleThreadExecutor().submit(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					// Secondary worker answering all play field requests when main worker releases lock.
+					lock.lock();
+					Iterator<PlayerRequest> iterator = queue.iterator();
+					while (iterator.hasNext()) {
+						PlayerRequest request = (PlayerRequest) iterator.next();
+						if (request.request.command.equals("playField")) {
+					    	Response res = new Response();
+							updatePlayField(res, request.user);
+							iterator.remove();
+						}
+					}
+					lock.unlock();
+				}
+			}
+		});
 	}
     
     private void initWebSocket(final User player, WebSocket.In<String> in, WebSocket.Out<String> out) {
@@ -130,9 +190,11 @@ public class Lobby extends Controller implements IObserver {
 		} else {
 			logger.debug("[Lobby:playerResponse] Called with: " + req.command);
 		}
-    	
+		queue.add(new PlayerRequest(player, req));
+    }
+
+	private void subPlayerRequest(User player, Request req) {
     	Response res = new Response();
-    	
     	if (req.command.equals("chat")) {
     		LocalTime localTime = LocalTime.now();
     		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
@@ -183,7 +245,7 @@ public class Lobby extends Controller implements IObserver {
 		} else if (req.command.equals("keepAlive")) {
 			logger.debug("[Lobby:playerResponse] received keepAlive from player: " + player.getName());
 		}
-    }
+	}
     
     private boolean gameIsInitializing() {
     	return controller.getStatus() == GameStatus.INITIALIZATION;

@@ -20,3 +20,4 @@ routesGenerator := InjectedRoutesGenerator
 enablePlugins(JavaAppPackaging)
 
 fork in run := true
+offline := true
