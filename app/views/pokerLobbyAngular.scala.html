@@ -16,7 +16,7 @@
 		<h3>Available Lobbies:</h3>
 		<div ng-if="hasLobbies">
             <div id="gameList" class="row">
-                <div class="btn-group-vertical col-xs-offset-1 col-xs-4" role="group">
+                <div class="btn-group-vertical col-xs-4" role="group">
                     <a href="/lobby/{{lobby}}" class="list-group-item" ng-repeat="lobby in lobbies">{{lobby}}</a>
                 </div>
             </div>
