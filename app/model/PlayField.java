@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class PlayField {
 	private String chipLeaderName;
 	private int chipLeaderCredits;
 	private boolean roundFinished;
+	private String lastEvent = "";
 	
 	public PlayField(PokerController controller, User player) {
 		for (Player p : controller.getPlayerList()) {
@@ -89,7 +91,18 @@ public class PlayField {
 		chipLeaderName = controller.getChipLeader().getPlayerName();
 		chipLeaderCredits = controller.getChipLeader().getPlayerMoney();
 		roundFinished = controller.roundFinished();
-		Logger.debug("ROUND FINISHED: " + roundFinished);
+		
+		LocalTime localTime = LocalTime.now();
+		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
+		try {
+			if (controller.getStatus() != GameStatus.INITIALIZATION) {
+				lastEvent = "[" + timeStamp + "]" + controller.getLastEvent();				
+			}
+		} catch (Exception e) {
+			Logger.info("could not get last event");
+		}
+
+		Logger.info("Last Event = " + lastEvent);
 		
 	}
 }

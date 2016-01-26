@@ -139,6 +139,14 @@ public class Lobby extends Controller implements IObserver {
     
 	private void playerLeft(final User player) {
         offlinePlayers.add(player);
+        
+		LocalTime localTime = LocalTime.now();
+		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
+		Response res = new Response();
+		res.setCommand("updateChat");
+		res.setChat("[" + timeStamp + "] " + player.toString() + " left the lobby and will be kicked in 60 seconds.");
+		updateAll(res);
+        
         new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -147,6 +155,14 @@ public class Lobby extends Controller implements IObserver {
 					if (!offlinePlayers.contains(player))
 						return;
 					logger.info(player.toString() + " still offline. Removing from game.");
+					
+					LocalTime localTime = LocalTime.now();
+		    		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
+		    		Response res = new Response();
+		    		res.setCommand("updateChat");
+		    		res.setChat("[" + timeStamp + "] " + player.toString() + " has been removed from the lobby.");
+		    		updateAll(res);
+					
 			        removePlayer(player);
 				} catch (InterruptedException consumed) { }
 			}
@@ -200,17 +216,27 @@ public class Lobby extends Controller implements IObserver {
     		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
     		
     		res.setCommand("updateChat");
-    		res.setChat("" + timeStamp + " " + player.toString() + ": " + req.value);
+    		res.setChat("[" + timeStamp + "] " + player.toString() + ": " + req.value);
     		updateAll(res);
     	} else if (req.command.equals("playField") && gameIsRunning()) {
     		updatePlayField(res, player);
     		
     	} else if (req.command.equals("ready") && gameIsInitializing()) {
+			LocalTime localTime = LocalTime.now();
+    		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
+    		res.setChat("");
     		if (req.value.equals("true")) {
     			players.put(player, true);
+        		res.setChat("[" + timeStamp + "] " + player.toString() + " changed state to \"ready\".");
     		} else if (req.value.equals("false")) {
     			players.put(player, false);
+    			res.setChat("[" + timeStamp + "] " + player.toString() + " changed state to \"not ready\".");
     		}
+
+    		res.setCommand("updateChat");
+    		updateAll(res);
+    		
+    		
     		if (gameIsInitializing()) {
     			updateLobby();
     			checkForGameStart();
@@ -271,9 +297,17 @@ public class Lobby extends Controller implements IObserver {
 			for (Entry<User, Boolean> entry : players.entrySet()) {
 				controller.addPlayer(entry.getKey().toString());
 			}
+			
+			logger.info("Game started with players: " + controller.getPlayerList().toString());
 			controller.startGame();
 			gameStarted = true;
-			//playFieldChanged();
+			
+			LocalTime localTime = LocalTime.now();
+    		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
+    		Response res = new Response();
+    		res.setCommand("updateChat");
+    		res.setChat("[" + timeStamp + "][All players are ready - starting game]");
+    		updateAll(res);
 		}
 	}
 
@@ -317,7 +351,7 @@ public class Lobby extends Controller implements IObserver {
 			outputChannels.get(player).write(response.asJson());
 		} catch (Exception e) {
 			logger.debug("[Lobby:updateAll] ERROR: Could not convert response to Json: " + e.getMessage());
-		}		
+		}
 		logger.debug("[Lobby:updateAll] update was sent to " + player.getName());
     }
 
@@ -325,9 +359,24 @@ public class Lobby extends Controller implements IObserver {
 		logger.debug("[Lobby:getSocketForPlayer] getSocketForPlayer called. Return new socket for player '" + player.getName());
 		if (offlinePlayers.contains(player)) {
 				logger.debug("[Lobby:getSocketForPlayer] '" + player.getName() + "' rejoined the game");
+				
+				LocalTime localTime = LocalTime.now();
+	    		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
+	    		Response res = new Response();
+	    		res.setCommand("updateChat");
+	    		res.setChat("[" + timeStamp + "] " + player.toString() + " rejoined the lobby.");
+	    		updateAll(res);
+				
 				offlinePlayers.remove(player);
 		} else if (players.size() >= 8) {
 			return WebSocket.reject(Results.badRequest("Lobby is already full."));
+		} else {
+			LocalTime localTime = LocalTime.now();
+    		String timeStamp = String.valueOf(localTime.getHour()) + ":" + String.valueOf(localTime.getMinute()) + ":" + String.valueOf(localTime.getSecond());
+    		Response res = new Response();
+    		res.setCommand("updateChat");
+    		res.setChat("[" + timeStamp + "] " + player.toString() + " joined the Lobby.");
+    		updateAll(res);
 		}
 		return new WebSocket<String>() {
 			@Override

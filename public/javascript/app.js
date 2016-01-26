@@ -57,6 +57,8 @@ angular.module('ngPokerApp', [])
 	$scope.chipLeaderName;
 	$scope.chipLeaderCredits;
 	$scope.roundFinished;
+	$scope.lastEvent;
+	$scope.beforeLastEvent = "";
 	
 	$scope.playField = function() {
 		console.log("$scope.playField - sendUpdatePlayField");
@@ -176,7 +178,16 @@ angular.module('ngPokerApp', [])
 		$scope.chipLeaderName = json.value.chipLeaderName;
 		$scope.chipLeaderCredits = json.value.chipLeaderCredits;
 		$scope.roundFinished = json.value.roundFinished;
+		$scope.lastEvent = json.value.lastEvent;
+		
+		if ($scope.beforeLastEvent != $scope.lastEvent && $scope.lastEvent.length >= 12) {
+			$scope.beforeLastEvent = $scope.lastEvent;
 			
+			$scope.chatArea.push($scope.lastEvent);
+		} else {
+			console.log("prevented same lastEvent");
+		}
+
 		$scope.$apply();
 	};
 }]);
