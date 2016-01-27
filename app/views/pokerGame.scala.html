@@ -14,9 +14,6 @@
             <div class="row">
                 <div class="col-xs-3 col-sm-3 col-md-3" ng-repeat="(key, value) in players">
                     <p class="btn btn-primary btn-block round playercolor text-center" ng-class="key === currentPlayer ? 'redbtn' : 'bluebtn'">{{key}}</p>
-                    <!-- <div ng-repeat="(cardKey, cardValue) in value.cards" class="holeCards">
-                        <div class="playercard"><img src="/images/Cards/{{cardValue.rank}}_{{cardValue.suit}}.png"/></div>
-                    </div> -->
                      <p class="credits">Credits: {{value.credits}}</p>
                     <div ng-repeat="n in [0, 1]" class="holeCards">
                     	<div class="playercard"><img ng-if="activePlayers.indexOf(key) !== -1" ng-src="{{value.cards.length === 2 ? '/assets/images/Cards/' + value.cards[n].rank + '_' + value.cards[n].suit + '.png' : '/assets/images/Cards/POKER.png'}}"/></div>
@@ -34,7 +31,7 @@
                     </div>
                     
                     <div class="col-md-10 col-md-offset-1">
-                        <p>Pot: {{pot}}</p>
+                        <p class="pot">Pot: {{pot}}</p>
                     </div>
                 </div>
             </div>
@@ -64,7 +61,7 @@
         <div id="player-list" ng-repeat="(key, value) in lobbyPlayer">            		
             	<p ng-style="{color: value ? 'green' : 'red' }">{{key}}</p>
             </div>
-            <input type="checkbox" ng-model="readyState" ng-change="ready()"/><label>Ich bin bereit zum Spielen</label>
+            <input type="checkbox" ng-model="readyState" ng-change="ready()" ng-style="{visibility: ready ? 'visible' : 'hidden'}"/><label>Ich bin bereit zum Spielen</label>
             <div class="btn btn-group" ng-style="{visibility: yourTurn || roundFinished ? 'visible' : 'hidden'}">
                 <button ng-click="call()">{{currentCallValue > 0 ? 'Call ' + currentCallValue + ' Cr.' : 'Check'}}</button>
                 <input ng-model="raiseValue">
