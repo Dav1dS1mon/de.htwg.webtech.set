@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-md-10 col-md-offset-1">
+                    <div ng-style="{visibility: (gameStatus == 'RUNNING') ? 'visible' : 'hidden'}" class="col-md-10 col-md-offset-1">
                         <p class="pot">Pot: {{pot}}</p>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
             	<p ng-style="{color: value ? 'green' : 'red' }">{{key}}</p>
             </div>
             <input type="checkbox" ng-model="readyState" ng-change="ready()" ng-style="{visibility: ready ? 'visible' : 'hidden'}"/><label>Ich bin bereit zum Spielen</label>
-            <div class="btn btn-group" ng-style="{visibility: yourTurn || roundFinished ? 'visible' : 'hidden'}">
+            <div class="btn btn-group" ng-style="{visibility: (yourTurn == true && roundFinished == false) ? 'visible' : 'hidden'}">
                 <button ng-click="call()">{{currentCallValue > 0 ? 'Call ' + currentCallValue + ' Cr.' : 'Check'}}</button>
                 <input ng-model="raiseValue">
                 <button ng-click="raise()">Raise</button>
