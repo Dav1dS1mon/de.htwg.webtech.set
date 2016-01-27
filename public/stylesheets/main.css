@@ -49,6 +49,8 @@ hr {
 
 .credits {
     text-align: center;
+    color: #00FF00;
+    font-weight: bold;
     width: 100%;
     margin-bottom: 5px;
     margin-top: 5px;
