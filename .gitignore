@@ -8,6 +8,7 @@ poker/.sbtserver
 *.sbtserver
 poker/project/.sbtserver
 project
+node_modules/
 
 # Files
 *.log

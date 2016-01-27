@@ -1,0 +1,24 @@
+{
+  "name": "poker",
+  "description": "Texas Holdem",
+  "main": "",
+  "authors": [
+    "Hawk30100 <hawk30100@yahoo.de>"
+  ],
+  "license": "GPL",
+  "homepage": "https://github.com/Hawk30100/de.htwg.webtech.set",
+  "moduleType": [
+    "node"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.3"
+  }
+}
