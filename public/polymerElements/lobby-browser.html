@@ -1,15 +1,39 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
-<script src="/javascript/lobby.js"></script>
 
 <dom-module name="lobby-browser">
 
 	<template>
-		<div>hallo</div>
+	<h2>Lobby Browser</h2>
+		<form action="/lobby" method="get">
+			<input bind-value="{{lobby}}"><button type="submit">Create new Lobby</button>
+			<h3>Available Lobbies:</h3>
+			<template is="dom-repeat" items="{{lobbys}}" as="lby">
+				<p><a href="/lobby/{{lby}}">{{lby}}</a></p>
+			</template>
+			</input>
+		</form>
 	</template>
-</dom-module>
+	</dom-module>
 	
 	<script>
 		Polymer({
-			is: "lobby-browser"
+			is: "lobby-browser",
+			properties: {
+				lobby: {
+					type: String,
+					value: ""
+				},
+				lobbies: {
+					type: Array,
+					value: [],
+				}
+		},
+			updateLobby: function(data) {
+				this.lobbies = data;
+				console.log("update: " + this.lobbies);
+		},
+			clickAction: function(lobbyClick) {
+			this.lobby = lobbyClick.detail;
+		}
 		});
 	</script>
