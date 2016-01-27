@@ -17,11 +17,10 @@
                     <!-- <div ng-repeat="(cardKey, cardValue) in value.cards" class="holeCards">
                         <div class="playercard"><img src="/images/Cards/{{cardValue.rank}}_{{cardValue.suit}}.png"/></div>
                     </div> -->
-                    
+                     <p class="credits">Credits: {{value.credits}}</p>
                     <div ng-repeat="n in [0, 1]" class="holeCards">
                     	<div class="playercard"><img ng-if="activePlayers.indexOf(key) !== -1" ng-src="{{value.cards.length === 2 ? '/assets/images/Cards/' + value.cards[n].rank + '_' + value.cards[n].suit + '.png' : '/assets/images/Cards/POKER.png'}}"/></div>
                     </div>
-                    <div class="col-sm-6 col-md-6">{{value.credits}}</div>
                 </div>
             </div>
             
