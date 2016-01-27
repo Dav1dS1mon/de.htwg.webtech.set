@@ -1,3 +1,16 @@
+function chatScoll() {
+var height = 0;
+console.log("chatScroll()");
+$('#chat-area').each(function(i, value){
+    height += parseInt($(this).height());
+});
+
+height += '';
+console.log("height = "  + height);
+
+$('#chat-area').animate({scrollTop: height});
+}
+
 angular.module('ngPokerApp', [])
 .controller('PokerController', ['$scope', function($scope) {
 
@@ -12,6 +25,7 @@ angular.module('ngPokerApp', [])
     		case "updateChat":
 	    		$scope.chatArea.push(jsonResponse.value);
 	    		$scope.$apply();
+chatScoll();
 	    		break;
 	    	case "updateLobby":
 				//Update Lobby Player List
@@ -194,9 +208,13 @@ angular.module('ngPokerApp', [])
 			$scope.beforeLastEvent = $scope.lastEvent;
 			
 			$scope.chatArea.push($scope.lastEvent);
+
+
 		} else {
 			console.log("prevented same lastEvent");
 		}
+
+
 
 		$scope.$apply();
 		
@@ -205,10 +223,9 @@ angular.module('ngPokerApp', [])
 			alert($scope.winner + " won the game! \nThanks for playing!\n\nYou will be redirected to the Lobby Browser by clicking on 'OK'");
 			window.location.replace('http://' + location.host + '/pokerAngular');
 		}
+
 	};
 }]);
-
-
 
 
 
