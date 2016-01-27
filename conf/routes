@@ -21,6 +21,8 @@ GET		/pokerAngular			@controllers.Application.pokerAngular
 GET		/lobby              	@controllers.LobbyController.play(lobbyName: String ?= "")
 GET		/lobby/:lobbyName    	@controllers.LobbyController.play(lobbyName: String)
 
+# Polymer Game
+GET		/pokerPolymer			@controllers.Application.pokerPolymer
 
 # Map static resources from the /public folder to the /assets URL path
 #GET    /assets/*file         controllers.Assets.at(path="/public", file)
@@ -28,5 +30,7 @@ GET     /images/*file         controllers.Assets.at(path="/public/images", file)
 GET     /assets/*file         controllers.Assets.versioned(path="/public", file: Asset)
 GET		/images/Cards/*file	  controllers.Assets.at(path="/public/images/Cards", file)
 GET     /javascript/*file     controllers.Assets.at(path="/public/javascript", file)
+GET		/bower_components/*file controllers.Assets.at(path="/public/bower_components", file)
+GET		/polymerElements/*file	controllers.Assets.at(path="/public/polymerElements", file)
 GET     /stylesheets/*file    controllers.Assets.at(path="/public/stylesheets", file)
 ->      /auth                 securesocial.Routes
