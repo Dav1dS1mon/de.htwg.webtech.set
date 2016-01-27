@@ -61,7 +61,7 @@
         <div id="player-list" ng-repeat="(key, value) in lobbyPlayer">            		
             	<p ng-style="{color: value ? 'green' : 'red' }">{{key}}</p>
             </div>
-            <input type="checkbox" ng-model="readyState" ng-change="ready()" ng-style="{visibility: ready ? 'visible' : 'hidden'}"/><label>Ich bin bereit zum Spielen</label>
+            <div ng-style="{visibility: gameStatus == '' ? 'visible' : 'hidden'}"><input type="checkbox" ng-model="readyState" ng-change="ready()"/><label>Ich bin bereit zum Spielen</label></div>
             <div class="btn btn-group" ng-style="{visibility: (yourTurn == true && roundFinished == false) ? 'visible' : 'hidden'}">
                 <button ng-click="call()">{{currentCallValue > 0 ? 'Call ' + currentCallValue + ' Cr.' : 'Check'}}</button>
                 <input ng-model="raiseValue">

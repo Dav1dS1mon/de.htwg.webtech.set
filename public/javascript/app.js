@@ -68,6 +68,7 @@ angular.module('ngPokerApp', [])
 	$scope.lastEvent;
 	$scope.beforeLastEvent = "";
 	$scope.showOnce = false;
+	$scope.gameStatus = "";
 	
 	$scope.playField = function() {
 		console.log("$scope.playField - sendUpdatePlayField");
