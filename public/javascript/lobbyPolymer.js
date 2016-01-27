@@ -1,7 +1,7 @@
 var lobbies = [];
 
 function getLobbyData() {
-	$.get("/lobbys", function(data, status){
+	$.get("/lobbysP", function(data, status){
 	  	console.log("Available lobbies: " + data);
 	  	lobbies = data;
 	  	var lobbyBrowser = document.querySelector('lobby-browser');

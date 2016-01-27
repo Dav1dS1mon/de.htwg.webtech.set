@@ -59,6 +59,20 @@ public class LobbyController extends Controller {
 	}
 	
 	@SecuredAction
+	public Result getLobbysP() {
+		String lobbyString;
+		synchronized (lobbys) {
+			removeEmptyLobbys();
+			Map<String, String> lobbyList = new HashMap<String, String>();
+			for (Entry<String, Lobby> entry : lobbys.entrySet()) {
+				lobbyList.put("name", entry.getKey());
+			}
+			lobbyString = new Gson().toJson(lobbyList);
+		}
+		return ok(lobbyString);
+	}
+	
+	@SecuredAction
 	public Result play(String lobbyName) {
 		logger.debug("[LobbyController:play] Play function called");
 		if (lobbyName.equals("")) {

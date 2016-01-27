@@ -15,6 +15,7 @@ GET		/poker					@controllers.Application.index
 GET		/help					@controllers.Application.pokerHelp
 GET		/about					@controllers.Application.pokerAbout
 GET		/lobbys					@controllers.LobbyController.getLobbys
+GET		/lobbysP				@controllers.LobbyController.getLobbysP
 
 # Angular Game
 GET		/pokerAngular			@controllers.Application.pokerAngular

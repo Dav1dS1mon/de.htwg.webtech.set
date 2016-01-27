@@ -7,8 +7,8 @@
 		<form action="/lobby" method="get">
 			<input bind-value="{{lobby}}"><button type="submit">Create new Lobby</button>
 			<h3>Available Lobbies:</h3>
-			<template is="dom-repeat" items="{{lobbys}}" as="lby">
-				<p><a href="/lobby/{{lby}}">{{lby}}</a></p>
+			<template is="dom-repeat" items="{{a in lobbies}}">
+				<p><a href="/lobby/{{a.name}}">{{a.name}}</a></p>
 			</template>
 			</input>
 		</form>
@@ -25,7 +25,7 @@
 				},
 				lobbies: {
 					type: Array,
-					value: [],
+					notify: true,
 				}
 		},
 			updateLobby: function(data) {
