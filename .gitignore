@@ -19,8 +19,6 @@ node_modules/
 # Others
 /.idea
 /.idea_modules
-.classpath
-.project
 .settings
 
 # Runtime
